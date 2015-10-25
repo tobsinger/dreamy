@@ -8,51 +8,50 @@
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/hours1"
-        android:layout_width="32dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:paddingBottom="5dp"
         />
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/hours2"
-        android:layout_width="32dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:paddingBottom="5dp"
         />
 
     <TextView
+        android:id="@+id/separator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text=":"
-        android:textColor="@color/blue"
         android:textSize="16dp"/>
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/minutes1"
-        android:layout_width="32dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:paddingBottom="5dp"
         />
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/minutes2"
-        android:layout_width="32dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:paddingBottom="5dp"
-        android:textSize="32sp"
         />
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/seconds1"
-        android:layout_width="16dp"
+        android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:paddingBottom="5dp"
         />
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/seconds2"
-        android:layout_width="16dp"
+        android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:paddingBottom="5dp"
         />

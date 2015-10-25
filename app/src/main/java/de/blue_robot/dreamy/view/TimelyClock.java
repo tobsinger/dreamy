@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 
@@ -29,6 +30,7 @@ public class TimelyClock extends LinearLayout {
     private TimelyView minutes2;
     private TimelyView seconds1;
     private TimelyView seconds2;
+    private TextView separator;
 
     public static final int NO_VALUE = -1;
     private int mSecondFirstDigit = NO_VALUE;
@@ -47,7 +49,7 @@ public class TimelyClock extends LinearLayout {
         try {
             init(context, null);
         } catch (NoSuchFieldException e) {
-           Log.w(TAG, e);
+            Log.w(TAG, e);
         } catch (IllegalAccessException e) {
             Log.w(TAG, e);
         }
@@ -56,7 +58,7 @@ public class TimelyClock extends LinearLayout {
     public TimelyClock(Context context, AttributeSet attrs) {
         super(context, attrs);
         try {
-            init(context, null);
+            init(context, attrs);
         } catch (NoSuchFieldException e) {
             Log.w(TAG, e);
         } catch (IllegalAccessException e) {
@@ -91,6 +93,7 @@ public class TimelyClock extends LinearLayout {
             inflater.inflate(R.layout.timely_clock, this);
         }
 
+        int textSize = 0;
         int color = getResources().getColor(android.R.color.holo_blue_dark);
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -98,7 +101,8 @@ public class TimelyClock extends LinearLayout {
                     R.styleable.TimelyClock,
                     0, 0);
             try {
-                color = a.getInteger(R.styleable.TimelyClock_clockTextColor, 0);
+                color = a.getInteger(R.styleable.TimelyClock_clockTextColor, color);
+                textSize = a.getDimensionPixelSize(R.styleable.TimelyClock_textSize, textSize);
             } finally {
                 a.recycle();
             }
@@ -106,27 +110,37 @@ public class TimelyClock extends LinearLayout {
 
         hours1 = (TimelyView) findViewById(R.id.hours1);
         hours1.setColor(color);
+        hours1.getLayoutParams().height = textSize;
         hours1.init();
 
         hours2 = (TimelyView) findViewById(R.id.hours2);
         hours2.setColor(color);
+        hours2.getLayoutParams().height = textSize;
         hours2.init();
 
         minutes1 = (TimelyView) findViewById(R.id.minutes1);
         minutes1.setColor(color);
+        minutes1.getLayoutParams().height = textSize;
         minutes1.init();
 
         minutes2 = (TimelyView) findViewById(R.id.minutes2);
         minutes2.setColor(color);
+        minutes2.getLayoutParams().height = textSize;
         minutes2.init();
 
         seconds1 = (TimelyView) findViewById(R.id.seconds1);
         seconds1.setColor(color);
+        seconds1.getLayoutParams().height = textSize / 2;
         seconds1.init();
 
         seconds2 = (TimelyView) findViewById(R.id.seconds2);
         seconds2.setColor(color);
+        seconds2.getLayoutParams().height = textSize / 2;
         seconds2.init();
+
+        separator = (TextView) findViewById(R.id.separator);
+        separator.setTextSize();
+        separator.setTextColor(color);
 
         timeSetter = new Runnable() {
 
