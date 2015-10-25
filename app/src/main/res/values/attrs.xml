@@ -1,0 +1,11 @@
+<resources>
+
+
+    <declare-styleable name="TimelyClock">
+        <attr name="clockTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TimelyView">
+        <attr name="textColor" format="color" />
+    </declare-styleable>
+</resources>
