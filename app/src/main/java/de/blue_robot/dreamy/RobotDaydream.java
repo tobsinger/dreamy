@@ -5,12 +5,20 @@ import android.service.dreams.DreamService;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import de.blue_robot.dreamy.notification.Settings;
+
 
 /**
  * Created by Tobs on 24/10/15.
  */
 public class RobotDaydream extends DreamService implements OnClickListener {
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Settings s = new Settings(this);
+        s.activateService();
+    }
 
     @Override
     public void onAttachedToWindow() {
