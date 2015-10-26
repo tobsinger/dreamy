@@ -3,10 +3,14 @@ package de.blue_robot.dreamy.listener;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.content.pm.PackageManager;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+
+import de.blue_robot.dreamy.RobotDaydream;
 
 public class NotificationListener extends AccessibilityService {
 
@@ -26,6 +30,8 @@ public class NotificationListener extends AccessibilityService {
                 CharSequence packageName = event.getPackageName();
                 try {
                     Drawable icon = getPackageManager().getApplicationIcon(packageName.toString());
+                    icon = convertToGrayscale(icon);
+                    RobotDaydream.getsInstance().setIcon(icon);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -33,6 +39,17 @@ public class NotificationListener extends AccessibilityService {
                 Log.e(TAG, "Notification Message is empty. Can not broadcast");
             }
         }
+    }
+
+    protected Drawable convertToGrayscale(Drawable drawable) {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+        drawable.setColorFilter(filter);
+
+        return drawable;
     }
 
 

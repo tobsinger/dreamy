@@ -6,22 +6,26 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import de.blue_robot.dreamy.RobotDaydream;
+
 /**
  * Created by Tobs on 26/10/15.
  */
 public class Settings {
 
-    public Settings(Context context){
+    public Settings(RobotDaydream context) {
         this.context = context;
     }
 
     private static final String TAG = Settings.class.getSimpleName();
-    private Context context;
+    private RobotDaydream context;
 
     public void activateService() {
         final Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        if (!this.isAccessibilityEnabled()) {
+            context.startActivity(intent);
+        }
     }
 
     /**
@@ -29,12 +33,12 @@ public class Settings {
      *
      * @return
      */
-    public static boolean isAccessibilityEnabled(Activity activity)  {
+    public boolean isAccessibilityEnabled() {
         int accessibilityEnabled = 0;
         final String LIGHTFLOW_ACCESSIBILITY_SERVICE = "de.bluerobot.flashnotification/de.bluerobot.flashnotification.Notificationdetector";
         final boolean accessibilityFound = false;
         try {
-            accessibilityEnabled = android.provider.Settings.Secure.getInt(activity.getContentResolver(),
+            accessibilityEnabled = android.provider.Settings.Secure.getInt(this.context.getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
             Log.d(TAG, "ACCESSIBILITY: " + accessibilityEnabled);
         } catch (final android.provider.Settings.SettingNotFoundException e) {
@@ -48,7 +52,7 @@ public class Settings {
         if (accessibilityEnabled == 1) {
             Log.d(TAG, "***ACCESSIBILIY IS ENABLED***: ");
 
-            final String settingValue = android.provider.Settings.Secure.getString(activity.getContentResolver(),
+            final String settingValue = android.provider.Settings.Secure.getString(this.context.getContentResolver(),
                     android.provider.Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
             Log.d(TAG, "Setting: " + settingValue);
             if (settingValue != null) {
