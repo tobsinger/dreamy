@@ -23,7 +23,7 @@ public class RobotDaydream extends DreamService implements OnClickListener {
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-        setContentView(R.layout.timely_layout);
+        setContentView(R.layout.daydream_layout);
     }
 
 

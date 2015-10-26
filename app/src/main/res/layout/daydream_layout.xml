@@ -11,8 +11,11 @@
         android:layout_centerInParent="true"
         android:id="@+id/timelyClock"
         app:clockTextColor="@color/white"
-        app:textSize="42dp"
+        app:textSize="62dp"
+        app:strokeThickness="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+
 
 </RelativeLayout>

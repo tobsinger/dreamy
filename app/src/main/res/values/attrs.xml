@@ -4,6 +4,7 @@
     <declare-styleable name="TimelyClock">
         <attr name="clockTextColor" format="color" />
         <attr name="textSize" format="dimension" />
+        <attr name="strokeThickness" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="TimelyView">

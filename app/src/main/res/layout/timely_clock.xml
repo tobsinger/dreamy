@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
@@ -10,6 +9,7 @@
         android:id="@+id/hours1"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginRight="-10dp"
         android:paddingBottom="5dp"
         />
 
@@ -17,6 +17,7 @@
         android:id="@+id/hours2"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginLeft="-10dp"
         android:paddingBottom="5dp"
         />
 
@@ -26,12 +27,13 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text=":"
-        android:textSize="16dp"/>
+        />
 
     <de.blue_robot.dreamy.view.TimelyView
         android:id="@+id/minutes1"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginRight="-10dp"
         android:paddingBottom="5dp"
         />
 
@@ -39,6 +41,8 @@
         android:id="@+id/minutes2"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
         android:paddingBottom="5dp"
         />
 
@@ -46,6 +50,8 @@
         android:id="@+id/seconds1"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:paddingBottom="5dp"
         />
 
@@ -53,6 +59,7 @@
         android:id="@+id/seconds2"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
+        android:layout_marginLeft="-10dp"
         android:paddingBottom="5dp"
         />
 </LinearLayout>

@@ -94,6 +94,8 @@ public class TimelyClock extends LinearLayout {
         }
 
         int textSize = 0;
+        float colonTextSize = 0;
+        float thickness = 0;
         int color = getResources().getColor(android.R.color.holo_blue_dark);
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -103,43 +105,33 @@ public class TimelyClock extends LinearLayout {
             try {
                 color = a.getInteger(R.styleable.TimelyClock_clockTextColor, color);
                 textSize = a.getDimensionPixelSize(R.styleable.TimelyClock_textSize, textSize);
+                colonTextSize = a.getDimension(R.styleable.TimelyClock_textSize, colonTextSize);
+                thickness = a.getDimension(R.styleable.TimelyClock_strokeThickness, thickness);
             } finally {
                 a.recycle();
             }
         }
 
         hours1 = (TimelyView) findViewById(R.id.hours1);
-        hours1.setColor(color);
-        hours1.getLayoutParams().height = textSize;
-        hours1.init();
+        initTimelyView(hours1, color, textSize, thickness);
 
         hours2 = (TimelyView) findViewById(R.id.hours2);
-        hours2.setColor(color);
-        hours2.getLayoutParams().height = textSize;
-        hours2.init();
+        initTimelyView(hours2, color, textSize, thickness);
 
         minutes1 = (TimelyView) findViewById(R.id.minutes1);
-        minutes1.setColor(color);
-        minutes1.getLayoutParams().height = textSize;
-        minutes1.init();
+        initTimelyView(minutes1, color, textSize, thickness);
 
         minutes2 = (TimelyView) findViewById(R.id.minutes2);
-        minutes2.setColor(color);
-        minutes2.getLayoutParams().height = textSize;
-        minutes2.init();
+        initTimelyView(minutes2, color, textSize, thickness);
 
         seconds1 = (TimelyView) findViewById(R.id.seconds1);
-        seconds1.setColor(color);
-        seconds1.getLayoutParams().height = textSize / 2;
-        seconds1.init();
+        initTimelyView(seconds1, color, textSize / 2, thickness / 2);
 
         seconds2 = (TimelyView) findViewById(R.id.seconds2);
-        seconds2.setColor(color);
-        seconds2.getLayoutParams().height = textSize / 2;
-        seconds2.init();
+        initTimelyView(seconds2, color, textSize / 2, thickness / 2);
 
         separator = (TextView) findViewById(R.id.separator);
-        separator.setTextSize();
+        separator.setTextSize(colonTextSize / 6);
         separator.setTextColor(color);
 
         timeSetter = new Runnable() {
@@ -223,5 +215,12 @@ public class TimelyClock extends LinearLayout {
         Log.d(TAG, "formatting " + number);
 
         return result;
+    }
+
+    private void initTimelyView(TimelyView view, int color, int textSize, float thickness) throws NoSuchFieldException, IllegalAccessException {
+        view.setColor(color);
+        view.setThickness(thickness);
+        view.getLayoutParams().height = textSize;
+        view.init();
     }
 }

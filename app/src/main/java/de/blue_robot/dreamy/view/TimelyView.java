@@ -1,14 +1,10 @@
 package de.blue_robot.dreamy.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import java.lang.reflect.Field;
-
-import de.blue_robot.dreamy.R;
 
 /**
  * Extension to {@link com.github.adnansm.timelytextview.TimelyView}.
@@ -18,8 +14,8 @@ import de.blue_robot.dreamy.R;
  */
 public class TimelyView extends com.github.adnansm.timelytextview.TimelyView {
 
-    private final String TAG = TimelyView.class.getName();
     private int color;
+    private float thickness;
 
     public TimelyView(Context context) {
         super(context);
@@ -29,13 +25,21 @@ public class TimelyView extends com.github.adnansm.timelytextview.TimelyView {
         super(context, attrs);
     }
 
-
     public void setColor(int color) {
         this.color = color;
     }
 
+
     public int getColor() {
         return color;
+    }
+
+    public void setThickness(float thickness) {
+        this.thickness = thickness;
+    }
+
+    public float getThickness() {
+        return thickness;
     }
 
 
@@ -56,9 +60,11 @@ public class TimelyView extends com.github.adnansm.timelytextview.TimelyView {
         Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(this.color);
-        mPaint.setStrokeWidth(5.0F);
+        mPaint.setStrokeWidth(this.thickness);
         mPaint.setStyle(Paint.Style.STROKE);
 
         paintField.set(this, mPaint);
     }
+
+
 }
