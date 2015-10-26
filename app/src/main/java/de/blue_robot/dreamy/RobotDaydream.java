@@ -1,14 +1,23 @@
 package de.blue_robot.dreamy;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.service.dreams.DreamService;
+import android.service.notification.StatusBarNotification;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import de.blue_robot.dreamy.notification.Settings;
+import java.util.List;
+
+import de.blue_robot.dreamy.notifications.NotificationListener;
 
 
 /**
@@ -16,60 +25,84 @@ import de.blue_robot.dreamy.notification.Settings;
  */
 public class RobotDaydream extends DreamService implements OnClickListener {
 
+	private ImageView iconView;
 
-    private static RobotDaydream sInstance;
+	private LocalBroadcastManager localBroadcastManager;
 
-    private ImageView iconView;
+	/**
+	 * Set icon of latest notification
+	 *
+	 * @param bitmap Icon to set
+	 */
+	public void setIcon(Drawable bitmap) {
+		iconView.setImageDrawable(bitmap);
+	}
 
-    public static RobotDaydream getSharedInstance() {
-        return sInstance;
-    }
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Log.d("test", "creating daydream service");
+		initBroadcastManager();
+	}
 
-    /**
-     * Set icon of latest notification
-     *
-     * @param drawable Icon to set
-     */
-    public void setIcon(Drawable drawable) {
-        iconView.setImageDrawable(drawable);
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		localBroadcastManager.unregisterReceiver(bcr);
+	}
 
-    public RobotDaydream() {
-        super();
-        sInstance = this;
-    }
+	@Override
+	public void onAttachedToWindow() {
+		//setup daydream
+		super.onAttachedToWindow();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Settings s = new Settings(this);
-        s.activateService();
-    }
+		setInteractive(false);
+		setFullscreen(true);
 
-    @Override
-    public void onAttachedToWindow() {
-        //setup daydream
-        super.onAttachedToWindow();
-
-        setInteractive(false);
-        setFullscreen(true);
-
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
-        setContentView(R.layout.daydream_layout);
-        iconView = (ImageView) findViewById(R.id.iconView);
-    }
+		Point screenSize = new Point();
+		getWindowManager().getDefaultDisplay().getSize(screenSize);
+		setContentView(R.layout.daydream_layout);
+		iconView = (ImageView) findViewById(R.id.iconView);
+	}
 
 
-    @Override
-    public void onDreamingStarted() {
-        //daydream started
-        super.onDreamingStarted();
-    }
+	@Override
+	public void onDreamingStarted() {
+		//daydream started
+		super.onDreamingStarted();
+		viewNotifications();
+	}
 
 
-    @Override
-    public void onClick(View v) {
-        this.finish();
-    }
+	@Override
+	public void onClick(View v) {
+		this.finish();
+	}
+
+	private void initBroadcastManager() {
+		localBroadcastManager = LocalBroadcastManager.getInstance(this);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("notification_update");
+		localBroadcastManager.registerReceiver(bcr, filter);
+	}
+
+	private BroadcastReceiver bcr = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			viewNotifications();
+		}
+	};
+
+	private void viewNotifications() {
+		List<StatusBarNotification> notifications = NotificationListener.getNotifications();
+		Log.d("test", "number of notifications: " + notifications.size());
+		if (notifications.size() > 0) {
+			StatusBarNotification nf = notifications.get(0);
+			try {
+				setIcon(createPackageContext(nf.getPackageName(), Context.CONTEXT_IGNORE_SECURITY)
+								.getResources().getDrawable(nf.getNotification().icon));
+			} catch (PackageManager.NameNotFoundException e) {
+			}
+		}
+	}
 }
