@@ -21,16 +21,20 @@ public class RobotDaydream extends DreamService implements OnClickListener {
 
     private ImageView iconView;
 
-    public static RobotDaydream getsInstance() {
+    public static RobotDaydream getSharedInstance() {
         return sInstance;
     }
 
-
-    public void setIcon(Drawable drawable){
+    /**
+     * Set icon of latest notification
+     *
+     * @param drawable Icon to set
+     */
+    public void setIcon(Drawable drawable) {
         iconView.setImageDrawable(drawable);
     }
 
-    public RobotDaydream(){
+    public RobotDaydream() {
         super();
         sInstance = this;
     }
@@ -52,9 +56,7 @@ public class RobotDaydream extends DreamService implements OnClickListener {
 
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
-
         setContentView(R.layout.daydream_layout);
-
         iconView = (ImageView) findViewById(R.id.iconView);
     }
 

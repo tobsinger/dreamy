@@ -31,7 +31,7 @@ public class NotificationListener extends AccessibilityService {
                 try {
                     Drawable icon = getPackageManager().getApplicationIcon(packageName.toString());
                     icon = convertToGrayscale(icon);
-                    RobotDaydream.getsInstance().setIcon(icon);
+                    RobotDaydream.getSharedInstance().setIcon(icon);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -41,12 +41,17 @@ public class NotificationListener extends AccessibilityService {
         }
     }
 
+    /**
+     * Convert a drawable from grb to grayscale
+     *
+     * @param drawable
+     * @return Converted drawable
+     */
     protected Drawable convertToGrayscale(Drawable drawable) {
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
 
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-
         drawable.setColorFilter(filter);
 
         return drawable;
@@ -55,7 +60,6 @@ public class NotificationListener extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-
     }
 
     @Override
@@ -67,6 +71,4 @@ public class NotificationListener extends AccessibilityService {
     public static NotificationListener getSharedInstance() {
         return sSharedInstance;
     }
-
 }
-
