@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.service.dreams.DreamService;
@@ -32,10 +34,16 @@ public class RobotDaydream extends DreamService implements OnClickListener {
 	/**
 	 * Set icon of latest notification
 	 *
-	 * @param bitmap Icon to set
+	 * @param drawable Icon to set
 	 */
-	public void setIcon(Drawable bitmap) {
-		iconView.setImageDrawable(bitmap);
+	public void setIcon(Drawable drawable) {
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);
+
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+		drawable.setColorFilter(filter);
+		iconView.setImageDrawable(drawable);
 	}
 
 	@Override
