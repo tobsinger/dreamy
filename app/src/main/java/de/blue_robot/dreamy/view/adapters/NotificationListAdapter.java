@@ -1,8 +1,10 @@
 package de.blue_robot.dreamy.view.adapters;
 
+import android.app.Notification;
 import android.content.Context;
-import android.graphics.PorterDuff;
+import android.os.Build;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,8 +17,8 @@ import java.util.List;
  */
 public class NotificationListAdapter extends BaseAdapter {
 
-    private List<StatusBarNotification> notifications;
     private final Context context;
+    private List<StatusBarNotification> notifications;
 
     public NotificationListAdapter(Context context) {
         this(context, new ArrayList<StatusBarNotification>());
@@ -44,6 +46,13 @@ public class NotificationListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d("test", "item " + position + "; visibility: " + notifications.get(position).getNotification().visibility);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Notification publicVersion = notifications.get(position).getNotification().publicVersion;
+            if (publicVersion != null)
+                return publicVersion.contentView.apply(context, parent);
+        }
+
         return notifications.get(position).getNotification().contentView.apply(context, parent);
     }
 
