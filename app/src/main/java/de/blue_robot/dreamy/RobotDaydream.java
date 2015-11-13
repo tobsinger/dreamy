@@ -129,15 +129,15 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
         StatusBarNotification notification = (StatusBarNotification) parent.getAdapter().getItem(position);
         try {
             notification.getNotification().contentIntent.send();
-            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            final KeyguardManager.KeyguardLock kl = km .newKeyguardLock("MyKeyguardLock");
-            kl.disableKeyguard();
-
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
-                    | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                    | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
-            wakeLock.acquire();
+//            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+//            final KeyguardManager.KeyguardLock kl = km .newKeyguardLock("MyKeyguardLock");
+//            kl.disableKeyguard();
+//
+//            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//            PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+//                    | PowerManager.ACQUIRE_CAUSES_WAKEUP
+//                    | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
+//            wakeLock.acquire();
             this.finish();
         } catch (PendingIntent.CanceledException e) {
             Log.d("test", "intent canceled");

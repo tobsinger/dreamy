@@ -47,11 +47,11 @@ public class NotificationListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.d("test", "item " + position + "; visibility: " + notifications.get(position).getNotification().visibility);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Notification publicVersion = notifications.get(position).getNotification().publicVersion;
-            if (publicVersion != null)
-                return publicVersion.contentView.apply(context, parent);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Notification publicVersion = notifications.get(position).getNotification().publicVersion;
+//            if (publicVersion != null)
+//                return publicVersion.contentView.apply(context, parent);
+//        }
 
         return notifications.get(position).getNotification().contentView.apply(context, parent);
     }
