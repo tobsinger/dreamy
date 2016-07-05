@@ -3,9 +3,7 @@ package de.blue_robot.dreamy.view.adapters;
 import android.app.Notification;
 import android.content.Context;
 import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import java.util.List;
 import de.blue_robot.dreamy.R;
 
 /**
- * Created by tobe on 27.10.15.
  */
 public class NotificationListAdapter extends BaseAdapter {
 
@@ -63,24 +60,22 @@ public class NotificationListAdapter extends BaseAdapter {
         final TextView description = (TextView) rowView.findViewById(R.id.notificationDescription);
         final ImageView imageView = (ImageView) rowView.findViewById(R.id.notificationIcon);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (notification.when > 0) {
-                final Date date = new Date(notification.when);
-                final String dateString = new SimpleDateFormat("HH:mm").format(date);
-                timeView.setText(dateString);
-            }
-
-            description.setText(notification.extras.get("android.text").toString());
-            Icon icon;
-            headline.setText((String) notification.extras.get("android.title"));
-            icon = notification.getLargeIcon();
-            if (icon == null) {
-                icon = notification.getSmallIcon();
-                icon.setTint(context.getColor(R.color.white));
-            }
-            imageView.setImageIcon(icon);
+        if (notification.when > 0) {
+            final Date date = new Date(notification.when);
+            final String dateString = new SimpleDateFormat("HH:mm").format(date);
+            timeView.setText(dateString);
         }
+
+        description.setText(notification.extras.get("android.text").toString());
+        Icon icon;
+        headline.setText((String) notification.extras.get("android.title"));
+        icon = notification.getLargeIcon();
+        if (icon == null) {
+            icon = notification.getSmallIcon();
+            icon.setTint(context.getColor(R.color.white));
+        }
+        imageView.setImageIcon(icon);
 
         return rowView;
 
