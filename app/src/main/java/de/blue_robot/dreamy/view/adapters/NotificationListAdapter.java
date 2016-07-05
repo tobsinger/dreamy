@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.blue_robot.dreamy.R;
 
@@ -24,6 +25,7 @@ public class NotificationListAdapter extends BaseAdapter {
 
     private final Context context;
     private List<StatusBarNotification> notifications;
+
 
     public NotificationListAdapter(Context context) {
         this(context, new ArrayList<StatusBarNotification>());
@@ -54,30 +56,45 @@ public class NotificationListAdapter extends BaseAdapter {
         final Notification notification = notifications.get(position).getNotification();
         final LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.notification_layout, parent, false);
-        final TextView headline = (TextView) rowView.findViewById(R.id.notificationHeadline);
-        final TextView timeView = (TextView) rowView.findViewById(R.id.notificationTime);
-        final TextView description = (TextView) rowView.findViewById(R.id.notificationDescription);
-        final ImageView imageView = (ImageView) rowView.findViewById(R.id.notificationIcon);
+        ViewHolderItem viewHolder;
 
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.notification_layout, parent, false);
+            viewHolder = new ViewHolderItem();
+            // store the holder with the view.
+            convertView.setTag(viewHolder);
 
-        if (notification.when > 0) {
-            final Date date = new Date(notification.when);
-            final String dateString = new SimpleDateFormat("HH:mm").format(date);
-            timeView.setText(dateString);
+            viewHolder.headline = (TextView) convertView.findViewById(R.id.notificationHeadline);
+            viewHolder.timeView = (TextView) convertView.findViewById(R.id.notificationTime);
+            viewHolder.description = (TextView) convertView.findViewById(R.id.notificationDescription);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.notificationIcon);
+
+        } else {
+            viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        description.setText(notification.extras.get("android.text").toString());
+
+        if (notification.when > 0)
+
+        {
+            final Date date = new Date(notification.when);
+            final String dateString = new SimpleDateFormat("HH:mm", Locale.GERMANY).format(date);
+            viewHolder.timeView.setText(dateString);
+        }
+
+        viewHolder.description.setText((String) notification.extras.get("android.text"));
         Icon icon;
-        headline.setText((String) notification.extras.get("android.title"));
+        viewHolder.headline.setText((String) notification.extras.get("android.title"));
         icon = notification.getLargeIcon();
+
         if (icon == null) {
             icon = notification.getSmallIcon();
             icon.setTint(context.getColor(R.color.white));
         }
-        imageView.setImageIcon(icon);
 
-        return rowView;
+        viewHolder.imageView.setImageIcon(icon);
+
+        return convertView;
 
     }
 
@@ -88,5 +105,14 @@ public class NotificationListAdapter extends BaseAdapter {
     public void setNotifications(List<StatusBarNotification> notifications) {
         this.notifications = notifications;
         notifyDataSetChanged();
+    }
+
+
+    static class ViewHolderItem {
+
+        TextView headline;
+        TextView timeView;
+        TextView description;
+        ImageView imageView;
     }
 }
