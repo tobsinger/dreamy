@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.graphics.drawable.Icon;
 import android.service.notification.StatusBarNotification;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,8 @@ public class NotificationListAdapter extends BaseAdapter {
         final Notification notification = notifications.get(position).getNotification();
         final LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewHolderItem viewHolder;
 
+        final ViewHolderItem viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.notification_layout, parent, false);
             viewHolder = new ViewHolderItem();
@@ -73,19 +74,15 @@ public class NotificationListAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-
-        if (notification.when > 0)
-
-        {
+        if (notification.when > 0) {
             final Date date = new Date(notification.when);
             final String dateString = new SimpleDateFormat("HH:mm", Locale.GERMANY).format(date);
             viewHolder.timeView.setText(dateString);
         }
 
         viewHolder.description.setText((String) notification.extras.get("android.text"));
-        Icon icon;
         viewHolder.headline.setText((String) notification.extras.get("android.title"));
-        icon = notification.getLargeIcon();
+        Icon icon = notification.getLargeIcon();
 
         if (icon == null) {
             icon = notification.getSmallIcon();
@@ -102,7 +99,7 @@ public class NotificationListAdapter extends BaseAdapter {
         return notifications;
     }
 
-    public void setNotifications(List<StatusBarNotification> notifications) {
+    public void setNotifications(@NonNull List<StatusBarNotification> notifications) {
         this.notifications = notifications;
         notifyDataSetChanged();
     }
