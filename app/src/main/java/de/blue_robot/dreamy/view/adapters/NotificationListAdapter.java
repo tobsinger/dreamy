@@ -2,15 +2,23 @@ package de.blue_robot.dreamy.view.adapters;
 
 import android.app.Notification;
 import android.content.Context;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import de.blue_robot.dreamy.R;
 
 /**
  * Created by tobe on 27.10.15.
@@ -24,7 +32,7 @@ public class NotificationListAdapter extends BaseAdapter {
         this(context, new ArrayList<StatusBarNotification>());
     }
 
-    public NotificationListAdapter(Context context, List<StatusBarNotification> notifications) {
+    public NotificationListAdapter(final Context context, final List<StatusBarNotification> notifications) {
         this.context = context;
         this.notifications = notifications;
     }
@@ -46,14 +54,35 @@ public class NotificationListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("test", "item " + position + "; visibility: " + notifications.get(position).getNotification().visibility);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Notification publicVersion = notifications.get(position).getNotification().publicVersion;
-//            if (publicVersion != null)
-//                return publicVersion.contentView.apply(context, parent);
-//        }
+        final Notification notification = notifications.get(position).getNotification();
+        final LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View rowView = inflater.inflate(R.layout.notification_layout, parent, false);
+        final TextView headline = (TextView) rowView.findViewById(R.id.notificationHeadline);
+        final TextView timeView = (TextView) rowView.findViewById(R.id.notificationTime);
+        final TextView description = (TextView) rowView.findViewById(R.id.notificationDescription);
+        final ImageView imageView = (ImageView) rowView.findViewById(R.id.notificationIcon);
 
-        return notifications.get(position).getNotification().contentView.apply(context, parent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (notification.when > 0) {
+                final Date date = new Date(notification.when);
+                final String dateString = new SimpleDateFormat("hh:mm").format(date);
+                timeView.setText(dateString);
+            }
+            description.setText(notification.tickerText);
+            Icon icon;
+            headline.setText((String) notification.extras.get("android.title"));
+            icon = notification.getLargeIcon();
+            if (icon == null) {
+                icon = notification.getSmallIcon();
+                icon.setTint(context.getColor(R.color.white));
+            }
+            imageView.setImageIcon(icon);
+        }
+
+        return rowView;
+
     }
 
     public List<StatusBarNotification> getNotifications() {
