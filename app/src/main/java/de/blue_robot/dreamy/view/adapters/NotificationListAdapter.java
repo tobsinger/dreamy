@@ -67,10 +67,11 @@ public class NotificationListAdapter extends BaseAdapter {
 
             if (notification.when > 0) {
                 final Date date = new Date(notification.when);
-                final String dateString = new SimpleDateFormat("hh:mm").format(date);
+                final String dateString = new SimpleDateFormat("HH:mm").format(date);
                 timeView.setText(dateString);
             }
-            description.setText(notification.tickerText);
+
+            description.setText(notification.extras.get("android.text").toString());
             Icon icon;
             headline.setText((String) notification.extras.get("android.title"));
             icon = notification.getLargeIcon();
