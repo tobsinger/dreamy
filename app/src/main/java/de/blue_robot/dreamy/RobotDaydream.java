@@ -1,14 +1,14 @@
 package de.blue_robot.dreamy;
 
-import android.app.KeyguardManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Point;
-import android.os.Debug;
-import android.os.PowerManager;
+import android.os.Bundle;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,8 +17,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.blue_robot.dreamy.notifications.NotificationListener;
 import de.blue_robot.dreamy.view.adapters.NotificationListAdapter;
@@ -34,7 +37,7 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
 
     private LocalBroadcastManager localBroadcastManager;
 
-//    /**
+    //    /**
 //     * Set icon of latest notification
 //     *
 //     * @param drawable Icon to set
@@ -110,9 +113,30 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
     }
 
     private void viewNotifications() {
-        List<StatusBarNotification> notifications = NotificationListener.getNotifications();
-        Log.d("test", "number of notifications: " + notifications.size());
-        ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(notifications));
+
+        final List<StatusBarNotification> allNotifications = NotificationListener.getNotifications();
+        final List<StatusBarNotification> shownNotifications = new ArrayList<>();
+
+
+        final List<Integer> notifications = new ArrayList<>();
+
+        for (StatusBarNotification n : allNotifications) {
+
+            int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
+            if (!notifications.contains(singleNotificationIdentifier)) {
+//                if (n.getNotification().visibility != Notification.VISIBILITY_PUBLIC && n.getNotification().publicVersion == null) {
+                shownNotifications.add(n);
+                notifications.add(singleNotificationIdentifier);
+//                }
+            }
+        }
+        ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(shownNotifications));
+
+//        List<StatusBarNotification> notifications = NotificationListener.getNotifications();
+//        Log.d("test", "number of notifications: " + notifications.size());
+//        ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(notifications));
+
+
 //        if (notifications.size() > 0) {
 //            StatusBarNotification nf = notifications.get(0);
 //            try {
@@ -142,6 +166,22 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
         } catch (PendingIntent.CanceledException e) {
             Log.d("test", "intent canceled");
         }
+
+    }
+
+    /**
+     * Get an identifier for the notification based on the notifications content
+     *
+     * @param notification The notification to generate an identifier for
+     * @return The generated identifier
+     */
+    private int getNotificationIdentifier(Notification notification) {
+        final Date date = new Date(notification.when);
+        final String dateString = new SimpleDateFormat("HH:mm", Locale.GERMANY).format(date);
+        final Bundle extras = notification.extras;
+        final ApplicationInfo applicationInfo = ((ApplicationInfo) extras.get("android.rebuild.applicationInfo"));
+        final String identifierString = "" + dateString + (applicationInfo != null ? applicationInfo.className : "") + extras.get("android.title") + extras.get("android.text");
+        return identifierString.hashCode();
 
     }
 }
