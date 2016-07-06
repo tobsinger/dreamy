@@ -28,49 +28,42 @@ import de.blue_robot.dreamy.view.adapters.NotificationListAdapter;
 
 
 /**
- * Created by Tobs on 24/10/15.
+ * The actual day dream service implementation
  */
-public class RobotDaydream extends DreamService implements AdapterView.OnItemClickListener { //implements OnClickListener {
+public class RobotDaydream extends DreamService implements AdapterView.OnItemClickListener {
 
-    //    private ImageView iconView;
+    private final String TAG = RobotDaydream.class.getCanonicalName();
+
+    /**
+     * The list that holds the notification views
+     */
     private ListView listView;
-
+    /**
+     * Needed to receive updates about the notification list
+     */
     private LocalBroadcastManager localBroadcastManager;
 
-    //    /**
-//     * Set icon of latest notification
-//     *
-//     * @param drawable Icon to set
-//     */
-//    public void setIcon(Drawable drawable) {
-//        ColorMatrix matrix = new ColorMatrix();
-//        matrix.setSaturation(0);
-//
-//        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-//
-//        drawable.setColorFilter(filter);
-//        iconView.setImageDrawable(drawable);
-//    }
     private BroadcastReceiver bcr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            viewNotifications();
+            displayNotifications();
         }
     };
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("test", "creating daydream service");
+        Log.d(TAG, "creating daydream service");
         initBroadcastManager();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        localBroadcastManager.unregisterReceiver(bcr);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttachedToWindow() {
         //setup daydream
@@ -79,17 +72,23 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
         setInteractive(true);
         setFullscreen(true);
 
-        Point screenSize = new Point();
+        final Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         setContentView(R.layout.daydream_layout);
-//        iconView = (ImageView) findViewById(R.id.iconView);
+        final NotificationListAdapter adapter = new NotificationListAdapter(this);
         listView = (ListView) findViewById(R.id.listView);
-        NotificationListAdapter adapter = new NotificationListAdapter(this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(bcr);
+    }
 
 //    @Override
 //    public void onClick(View v) {
@@ -97,77 +96,62 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
 //        //this.finish();
 //    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDreamingStarted() {
-        //daydream started
         super.onDreamingStarted();
-        viewNotifications();
-//        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
+        displayNotifications();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "onitemclick");
+        final StatusBarNotification notification = (StatusBarNotification) parent.getAdapter().getItem(position);
+        try {
+            notification.getNotification().contentIntent.send();
+            this.finish();
+        } catch (PendingIntent.CanceledException e) {
+            Log.d(TAG, "intent canceled");
+        }
+
+    }
+
+    /**
+     * Initiate the broadcast manager and register the receiver for notifications about
+     * new status bar notifications
+     */
     private void initBroadcastManager() {
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("notification_update");
         localBroadcastManager.registerReceiver(bcr, filter);
     }
 
-    private void viewNotifications() {
-
+    /**
+     * Get the current list of status bar notifications, remove duplicates and display the rest in the list view
+     */
+    private void displayNotifications() {
         final List<StatusBarNotification> allNotifications = NotificationListener.getNotifications();
-        final List<StatusBarNotification> shownNotifications = new ArrayList<>();
-
-
+        final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
         final List<Integer> notifications = new ArrayList<>();
 
-        for (StatusBarNotification n : allNotifications) {
-
+        for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
             if (!notifications.contains(singleNotificationIdentifier)) {
-//                if (n.getNotification().visibility != Notification.VISIBILITY_PUBLIC && n.getNotification().publicVersion == null) {
-                shownNotifications.add(n);
+                filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
-//                }
             }
         }
-        ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(shownNotifications));
-
-//        List<StatusBarNotification> notifications = NotificationListener.getNotifications();
-//        Log.d("test", "number of notifications: " + notifications.size());
-//        ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(notifications));
-
-
-//        if (notifications.size() > 0) {
-//            StatusBarNotification nf = notifications.get(0);
-//            try {
-//                setIcon(createPackageContext(nf.getPackageName(), Context.CONTEXT_IGNORE_SECURITY)
-//                        .getResources().getDrawable(nf.getNotification().icon));
-//            } catch (PackageManager.NameNotFoundException e) {
-//            }
-//        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("test", "onitemclick");
-        StatusBarNotification notification = (StatusBarNotification) parent.getAdapter().getItem(position);
-        try {
-            notification.getNotification().contentIntent.send();
-//            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-//            final KeyguardManager.KeyguardLock kl = km .newKeyguardLock("MyKeyguardLock");
-//            kl.disableKeyguard();
-//
-//            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//            PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
-//                    | PowerManager.ACQUIRE_CAUSES_WAKEUP
-//                    | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
-//            wakeLock.acquire();
-            this.finish();
-        } catch (PendingIntent.CanceledException e) {
-            Log.d("test", "intent canceled");
+        if (listView != null) {
+            ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(filteredNotifications));
         }
-
     }
+
 
     /**
      * Get an identifier for the notification based on the notifications content
@@ -177,11 +161,10 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
      */
     private int getNotificationIdentifier(Notification notification) {
         final Date date = new Date(notification.when);
-        final String dateString = new SimpleDateFormat("HH:mm", Locale.GERMANY).format(date);
+        final String dateString = new SimpleDateFormat(Constants.TIME_PATTERN, Locale.GERMANY).format(date);
         final Bundle extras = notification.extras;
-        final ApplicationInfo applicationInfo = ((ApplicationInfo) extras.get("android.rebuild.applicationInfo"));
-        final String identifierString = "" + dateString + (applicationInfo != null ? applicationInfo.className : "") + extras.get("android.title") + extras.get("android.text");
+        final ApplicationInfo applicationInfo = ((ApplicationInfo) extras.get(Constants.NOTIFICATION_APP));
+        final String identifierString = "" + dateString + (applicationInfo != null ? applicationInfo.className : "") + extras.get(Constants.NOTIFICATION_TITLE) + extras.get(Constants.NOTIFICATION_CONTENT);
         return identifierString.hashCode();
-
     }
 }

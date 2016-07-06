@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.content.Context;
 import android.graphics.drawable.Icon;
 import android.service.notification.StatusBarNotification;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.blue_robot.dreamy.Constants;
 import de.blue_robot.dreamy.R;
 
 /**
@@ -59,6 +59,8 @@ public class NotificationListAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final ViewHolderItem viewHolder;
+
+        // Create view if no recyclable view was given
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.notification_layout, parent, false);
             viewHolder = new ViewHolderItem();
@@ -76,12 +78,13 @@ public class NotificationListAdapter extends BaseAdapter {
 
         if (notification.when > 0) {
             final Date date = new Date(notification.when);
-            final String dateString = new SimpleDateFormat("HH:mm", Locale.GERMANY).format(date);
+            final String dateString = new SimpleDateFormat(Constants.TIME_PATTERN, Locale.GERMANY).format(date);
             viewHolder.timeView.setText(dateString);
         }
 
-        viewHolder.description.setText((String) notification.extras.get("android.text"));
-        viewHolder.headline.setText((String) notification.extras.get("android.title"));
+        viewHolder.headline.setText(notification.extras.get(Constants.NOTIFICATION_TITLE).toString());
+        viewHolder.description.setText( notification.extras.get(Constants.NOTIFICATION_CONTENT).toString());
+        // Set the icon
         Icon icon = notification.getLargeIcon();
 
         if (icon == null) {
@@ -92,14 +95,14 @@ public class NotificationListAdapter extends BaseAdapter {
         viewHolder.imageView.setImageIcon(icon);
 
         return convertView;
-
     }
 
     public List<StatusBarNotification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(@NonNull List<StatusBarNotification> notifications) {
+    public void setNotifications(final List<StatusBarNotification> notifications) {
+
         this.notifications = notifications;
         notifyDataSetChanged();
     }
