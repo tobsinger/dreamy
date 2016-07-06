@@ -211,9 +211,6 @@ public class TimelyClock extends LinearLayout {
         for (int i = 0; i < numberOfDigits; i++) {
             result[i] = Integer.valueOf(formatted.substring(i, i + 1));
         }
-
-        Log.d(TAG, "formatting " + number);
-
         return result;
     }
 

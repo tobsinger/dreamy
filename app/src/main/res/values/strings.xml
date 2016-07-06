@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Dreamy</string>
     <string name="daydream_name">Dreamy</string>
+    <string name="unlock_on_time_click">Bei Tippen auf die Uhrzeit aufwecken</string>
 </resources>
