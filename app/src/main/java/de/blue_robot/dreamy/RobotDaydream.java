@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Debug;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
@@ -142,7 +143,7 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
 
         for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
-            if (!notifications.contains(singleNotificationIdentifier)) {
+            if (!notifications.contains(singleNotificationIdentifier) && (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC || n.getNotification().publicVersion != null)) {
                 filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
             }
