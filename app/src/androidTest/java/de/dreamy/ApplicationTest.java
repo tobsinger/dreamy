@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy;
+package de.dreamy;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

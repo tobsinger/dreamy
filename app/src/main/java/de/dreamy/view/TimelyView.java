@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy.view;
+package de.dreamy.view;
 
 import android.content.Context;
 import android.graphics.Paint;

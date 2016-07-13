@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy.view;
+package de.dreamy.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,7 +13,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.Calendar;
 
-import de.blue_robot.dreamy.R;
+import de.dreamy.R;
 
 /**
  * Created by Tobs on 25/10/15.

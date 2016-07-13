@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy;
+package de.dreamy;
 
 /**
  * Application wide constants

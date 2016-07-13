@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy.notifications;
+package de.dreamy.notifications;
 
 import android.content.Intent;
 import android.provider.Settings;
@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.blue_robot.dreamy.Constants;
+import de.dreamy.Constants;
 
 /**
  * Listener to be notified when notifications occur

@@ -1,19 +1,21 @@
-package de.blue_robot.dreamy;
+package de.dreamy.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Debug;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import javax.inject.Inject;
 
-import de.blue_robot.dreamy.dao.SettingsDao;
-import de.blue_robot.dreamy.entity.Settings;
+import de.dreamy.DreamyApplication;
+import de.dreamy.R;
+import de.dreamy.modules.DreamyComponent;
 
 /**
  * Ui to set the preferences of the daydream's behavior
  */
-public class CustomDreamSettingsActivity extends Activity {
+public class DreamySettingsActivity extends Activity {
 
     @Inject
     SettingsDao settingsDao;
@@ -21,6 +23,9 @@ public class CustomDreamSettingsActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DreamyApplication.getDreamyComponent().inject(this);
+
         setContentView(R.layout.dream_settings);
 
         final Switch endOnTimeClickSwitch = (Switch) findViewById(R.id.endOnTimeClickSwitch);
@@ -28,9 +33,9 @@ public class CustomDreamSettingsActivity extends Activity {
         endOnTimeClickSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                final Settings settings = settingsDao.getSettings(CustomDreamSettingsActivity.this);
+                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
                 settings.setWakeOnTimeClick(b);
-                settingsDao.persistSettings(settings, CustomDreamSettingsActivity.this);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
     }

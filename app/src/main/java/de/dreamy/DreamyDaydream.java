@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy;
+package de.dreamy;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -24,16 +24,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.blue_robot.dreamy.notifications.NotificationListener;
-import de.blue_robot.dreamy.view.adapters.NotificationListAdapter;
+import de.dreamy.notifications.NotificationListener;
+import de.dreamy.view.adapters.NotificationListAdapter;
 
 
 /**
  * The actual day dream service implementation
  */
-public class RobotDaydream extends DreamService implements AdapterView.OnItemClickListener {
+public class DreamyDaydream extends DreamService implements AdapterView.OnItemClickListener {
 
-    private final String TAG = RobotDaydream.class.getCanonicalName();
+    private final String TAG = DreamyDaydream.class.getCanonicalName();
 
     /**
      * The list that holds the notification views

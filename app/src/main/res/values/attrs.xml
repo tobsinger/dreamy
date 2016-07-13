@@ -1,6 +1,4 @@
 <resources>
-
-
     <declare-styleable name="TimelyClock">
         <attr name="clockTextColor" format="color" />
         <attr name="textSize" format="dimension" />

@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy.view.adapters;
+package de.dreamy.view.adapters;
 
 import android.app.Notification;
 import android.content.Context;
@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.blue_robot.dreamy.Constants;
-import de.blue_robot.dreamy.R;
+import de.dreamy.Constants;
+import de.dreamy.R;
 
 /**
  */

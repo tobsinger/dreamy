@@ -1,4 +1,4 @@
-package de.blue_robot.dreamy.entity;
+package de.dreamy.settings;
 
 /**
  * Preferences as given by the user

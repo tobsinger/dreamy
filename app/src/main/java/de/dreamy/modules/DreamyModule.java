@@ -1,22 +1,18 @@
-package de.blue_robot.dreamy;
+package de.dreamy.modules;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import de.blue_robot.dreamy.dao.SettingsDao;
+import de.dreamy.settings.SettingsDao;
 
-/**
- * Provider class for dependency injection with dagger
- */
 @Module
-public class DaggerProvider {
+public class DreamyModule {
 
     @Provides
     @Singleton
     SettingsDao provideSettingsDao() {
         return new SettingsDao();
     }
-
 
 }
