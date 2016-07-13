@@ -82,8 +82,17 @@ public class NotificationListAdapter extends BaseAdapter {
             viewHolder.timeView.setText(dateString);
         }
 
-        viewHolder.headline.setText(notification.extras.get(Constants.NOTIFICATION_TITLE).toString());
-        viewHolder.description.setText( notification.extras.get(Constants.NOTIFICATION_CONTENT).toString());
+        if (notification.extras.get(Constants.NOTIFICATION_TITLE) != null) {
+            viewHolder.headline.setText(notification.extras.get(Constants.NOTIFICATION_TITLE).toString());
+        }
+        else{
+            viewHolder.headline.setText(null);
+        }
+        if (notification.extras.get(Constants.NOTIFICATION_CONTENT) != null) {
+            viewHolder.description.setText(notification.extras.get(Constants.NOTIFICATION_CONTENT).toString());
+        }else{
+            viewHolder.description.setText(null);
+        }
         // Set the icon
         Icon icon = notification.getLargeIcon();
 

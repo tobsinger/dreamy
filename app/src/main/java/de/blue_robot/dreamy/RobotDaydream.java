@@ -9,10 +9,10 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Debug;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -80,6 +80,7 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+//        Debug.waitForDebugger();
     }
 
     /**
@@ -143,7 +144,8 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
 
         for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
-            if (!notifications.contains(singleNotificationIdentifier) && (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC || n.getNotification().publicVersion != null)) {
+            if (!notifications.contains(singleNotificationIdentifier) && ((isOnlyNotificationWithGroupKey(n, allNotifications))
+                    || (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC || n.getNotification().publicVersion != null))) {
                 filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
             }
@@ -151,6 +153,20 @@ public class RobotDaydream extends DreamService implements AdapterView.OnItemCli
         if (listView != null) {
             ((NotificationListAdapter) listView.getAdapter()).setNotifications(new ArrayList<>(filteredNotifications));
         }
+    }
+
+    private boolean isOnlyNotificationWithGroupKey(final StatusBarNotification notification, final List<StatusBarNotification> allNotificatoins) {
+        if (TextUtils.isEmpty(notification.getGroupKey())) {
+            return true;
+        }
+        for (final StatusBarNotification singleNotification : allNotificatoins) {
+            if (!notification.equals(singleNotification) && notification.getGroupKey().equals(singleNotification.getGroupKey())) {
+                if ((singleNotification.getNotification().visibility == Notification.VISIBILITY_PUBLIC || singleNotification.getNotification().publicVersion != null)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
