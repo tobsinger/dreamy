@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -17,22 +16,27 @@ import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
 
 /**
- * Ui to set the preferences of the daydream's behavior
+ * UI to set the preferences of the daydream's behavior
  */
 public class DreamySettingsActivity extends Activity {
 
     private static final String TAG = DreamySettingsActivity.class.getCanonicalName();
 
+    /**
+     * the dao to load and save {@link Settings}
+     */
     @Inject
     SettingsDao settingsDao;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         DreamyApplication.getDreamyComponent().inject(this);
         final Settings settings = settingsDao.getSettings(this);
-
         setContentView(R.layout.dream_settings);
 
         // End day dream on click on clock
@@ -63,20 +67,59 @@ public class DreamySettingsActivity extends Activity {
             }
         });
 
+        // Show battery info
+        final Switch showBatterySwitch = (Switch) findViewById(R.id.showBatteryStatusSwitch);
+        showBatterySwitch.setChecked(settings.isShowBatteryStatus());
+        showBatterySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
+                settings.setShowBatteryStatus(b);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+
+        // Show wifi info
+        final Switch showWifiSwitch = (Switch) findViewById(R.id.showWifiStatusSwitch);
+        showWifiSwitch.setChecked(settings.isShowWifiStatus());
+        showWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
+                settings.setShowWifiStatus(b);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+        // Show carrier info
+        final Switch showCarrierSwitch = (Switch) findViewById(R.id.showCarrierSwitch);
+        showCarrierSwitch.setChecked(settings.isShowCarrierName());
+        showCarrierSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
+                settings.setShowCarrierName(b);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
 
     }
 
 
+    /**
+     * Check if the notification listener service is running
+     *
+     * @return true if the service is running
+     */
     private boolean isNLServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
+        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (NotificationListener.class.getName().equals(service.service.getClassName())) {
-                Log.d(TAG, "notifications enabled");
                 return true;
             }
         }
-        Log.d(TAG, "notifications disabled");
         return false;
     }
 }

@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".DreamyApplication"
@@ -37,6 +38,7 @@
         </service>
 
         <activity android:name=".settings.DreamySettingsActivity"/>
+
 
     </application>
 

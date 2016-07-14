@@ -8,15 +8,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +34,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import de.dreamy.notifications.NotificationListener;
+import de.dreamy.settings.Settings;
 import de.dreamy.settings.SettingsDao;
 import de.dreamy.view.TimelyClock;
 import de.dreamy.view.adapters.NotificationListAdapter;
@@ -51,11 +59,35 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     private LocalBroadcastManager localBroadcastManager;
 
     private TimelyClock timelyClock;
+    private TextView batteryPercentage;
+    private ImageView chargingIcon;
 
-    private BroadcastReceiver bcr = new BroadcastReceiver() {
+    private BroadcastReceiver notificationBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             displayNotifications();
+        }
+    };
+
+
+    private BroadcastReceiver batteryBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent batteryStatus) {
+            // Are we charging / charged?
+            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
+
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            int batteryPct = (int) (level / (float) scale * 100);
+
+            if (chargingIcon != null) {
+                chargingIcon.setVisibility(isCharging ? View.VISIBLE : View.GONE);
+            }
+            if (batteryPercentage != null) {
+                batteryPercentage.setText(batteryPct + "%");
+            }
         }
     };
 
@@ -68,7 +100,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         super.onCreate();
 
         DreamyApplication.getDreamyComponent().inject(this);
-
         Log.d(TAG, "creating daydream service");
         initBroadcastManager();
     }
@@ -93,6 +124,33 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         listView.setOnItemClickListener(this);
         timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
         timelyClock.setOnClickListener(this);
+
+        batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
+        chargingIcon = (ImageView) findViewById(R.id.chargingIcon);
+        final Settings settings = settingsDao.getSettings(this);
+        if (settings.isShowBatteryStatus()) {
+            findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);
+        }
+
+        if (settings.isShowWifiStatus()) {
+            final View wifiInfo = findViewById(R.id.wifiInfo);
+            final String currentWifi = getCurrentWifi();
+            if (currentWifi != null) {
+                wifiInfo.setVisibility(View.VISIBLE);
+                final TextView wifiName = (TextView) findViewById(R.id.wifiName);
+                wifiName.setText(currentWifi);
+
+            } else {
+                wifiInfo.setVisibility(View.GONE);
+            }
+
+        }
+
+        if (settings.isShowCarrierName()) {
+            final TextView carrierTextView = (TextView) findViewById(R.id.carrierName);
+            carrierTextView.setVisibility(View.VISIBLE);
+            carrierTextView.setText(getCarrierName());
+        }
 //        Debug.waitForDebugger();
     }
 
@@ -102,16 +160,14 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     @Override
     public void onDestroy() {
         super.onDestroy();
-        localBroadcastManager.unregisterReceiver(bcr);
+        localBroadcastManager.unregisterReceiver(notificationBroadcastReceiver);
     }
 
     @Override
     public void onClick(View v) {
-
         if (timelyClock.equals(v) && settingsDao.getSettings(this).isWakeOnTimeClick()) {
             this.finish();
         }
-        //this.finish();
     }
 
     /**
@@ -150,12 +206,18 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.registerReceiver(bcr, filter);
+        localBroadcastManager.registerReceiver(notificationBroadcastReceiver, filter);
+
+        if (settingsDao.getSettings(this).isShowBatteryStatus()) {
+            final IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            this.registerReceiver(batteryBroadcastReceiver, ifilter);
+        }
     }
 
     /**
      * Get the current list of status bar notifications, remove duplicates and display the rest in the list view
      */
+
     private void displayNotifications() {
         final List<StatusBarNotification> allNotifications = NotificationListener.getNotifications();
         final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
@@ -203,4 +265,35 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final String identifierString = "" + dateString + (applicationInfo != null ? applicationInfo.className : "") + extras.get(Constants.NOTIFICATION_TITLE) + extras.get(Constants.NOTIFICATION_CONTENT);
         return identifierString.hashCode();
     }
+
+    /**
+     * Get the name of the currently connected wifi
+     *
+     * @return the name of the currently connected wifi. NULL if no wifi connected
+     */
+    private String getCurrentWifi() {
+        final ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final Network networks[] = connManager.getAllNetworks();
+        for (final Network singleNetwork : networks) {
+            final NetworkInfo networkInfo = connManager.getNetworkInfo(singleNetwork);
+            if (ConnectivityManager.TYPE_WIFI == networkInfo.getType()) {
+                if (!networkInfo.isConnected()) {
+                    continue;
+                }
+                String wifiName = connManager.getNetworkInfo(singleNetwork).getExtraInfo();
+//                if ("\"".equals(wifiName.charAt(0))) {
+//                    wifiName = wifiName.substring(1, wifiName.length());
+//                }
+                return wifiName;
+            }
+        }
+        return null;
+    }
+
+    private String getCarrierName() {
+        final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        final String carrierName = manager.getNetworkOperatorName();
+        return carrierName;
+    }
+
 }

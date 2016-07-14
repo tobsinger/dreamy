@@ -4,4 +4,7 @@
     <string name="unlock_on_time_click">Bei Tippen auf die Uhrzeit aufwecken</string>
     <string name="displayNotifications">Benachrichtigungen anzeigen</string>
     <string name="requestNotificationAccessMsg">Zugriff auf Benachrichtigungen muss gewährt werden</string>
+    <string name="displayBatteryStatus">Zeige Akkustand</string>
+    <string name="displayWifiStatus">Zeige WLAN Status</string>
+    <string name="displayCarrierName">Anbieternamen anzeigen</string>
 </resources>
