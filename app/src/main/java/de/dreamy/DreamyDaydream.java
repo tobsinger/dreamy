@@ -17,6 +17,7 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -67,6 +68,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * The battery icon
      */
     private ImageView batteryIcon;
+
+    private LocalBroadcastManager localBroadcastManager;
+
 
     /**
      * Broadcast receiver to handle incoming notifications
@@ -205,7 +209,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     @Override
     public void onDetachedFromWindow() {
         this.unregisterReceiver(batteryBroadcastReceiver);
-        this.unregisterReceiver(notificationBroadcastReceiver);
+        localBroadcastManager.unregisterReceiver(notificationBroadcastReceiver);
         super.onDetachedFromWindow();
     }
 
@@ -229,9 +233,12 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * new status bar notifications
      */
     private void initBroadcastManager() {
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
-        this.registerReceiver(notificationBroadcastReceiver, filter);
+        localBroadcastManager.registerReceiver(notificationBroadcastReceiver, filter);
 
         if (settingsDao.getSettings(this).isShowBatteryStatus()) {
             final IntentFilter batteryStatusIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
