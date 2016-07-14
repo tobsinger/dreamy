@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/black"
               android:orientation="vertical">
@@ -13,10 +13,13 @@
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="72dp">
 
             <TextView
                 style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="3dip"
                 android:text="@string/unlock_on_time_click"
                 android:textColor="@android:color/white"/>
@@ -30,16 +33,25 @@
                 android:id="@+id/endOnTimeClickSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:gravity="right"/>
+                android:layout_gravity="center_vertical|end"
+                android:gravity="end"/>
+
         </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="72dp">
 
             <TextView
                 style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="3dip"
                 android:text="@string/displayNotifications"
                 android:textColor="@android:color/white"/>
@@ -54,15 +66,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"/>
+
+
         </TableRow>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="72dp">
+
+            <SeekBar
+                android:id="@+id/notificationsDimBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:minWidth="100dp"/>
+
+            <TextView
+                android:id="@+id/notificationDimLabel"
+                style="@style/SettingsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/notificationsDimBar"
+                android:padding="3dip"
+                android:text="@string/notificatoinsVisibility"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="72dp">
 
             <TextView
                 style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="3dip"
                 android:text="@string/displayBatteryStatus"
                 android:textColor="@android:color/white"/>
@@ -77,15 +131,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"/>
+
+
         </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
 
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="72dp">
 
             <TextView
                 style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="3dip"
                 android:text="@string/displayWifiStatus"
                 android:textColor="@android:color/white"/>
@@ -100,15 +164,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"/>
+
         </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
 
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="72dp">
 
             <TextView
                 style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="3dip"
                 android:text="@string/displayCarrierName"
                 android:textColor="@android:color/white"/>
@@ -123,8 +196,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"/>
+
         </TableRow>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
 
     </TableLayout>
 

@@ -17,8 +17,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import de.dreamy.Constants;
+import de.dreamy.DreamyApplication;
 import de.dreamy.R;
+import de.dreamy.settings.Settings;
+import de.dreamy.settings.SettingsDao;
 
 /**
  */
@@ -26,6 +31,9 @@ public class NotificationListAdapter extends BaseAdapter {
 
     private final Context context;
     private List<StatusBarNotification> notifications;
+
+    @Inject
+    SettingsDao settingsDao;
 
 
     public NotificationListAdapter(Context context) {
@@ -35,6 +43,8 @@ public class NotificationListAdapter extends BaseAdapter {
     public NotificationListAdapter(final Context context, final List<StatusBarNotification> notifications) {
         this.context = context;
         this.notifications = notifications;
+
+        DreamyApplication.getDreamyComponent().inject(this);
     }
 
     @Override
@@ -55,13 +65,13 @@ public class NotificationListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Notification notification = notifications.get(position).getNotification();
-        final LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final ViewHolderItem viewHolder;
 
         // Create view if no recyclable view was given
         if (convertView == null) {
+            Settings settings = settingsDao.getSettings(context);
             convertView = inflater.inflate(R.layout.notification_layout, parent, false);
             viewHolder = new ViewHolderItem();
             // store the holder with the view.
@@ -84,13 +94,12 @@ public class NotificationListAdapter extends BaseAdapter {
 
         if (notification.extras.get(Constants.NOTIFICATION_TITLE) != null) {
             viewHolder.headline.setText(notification.extras.get(Constants.NOTIFICATION_TITLE).toString());
-        }
-        else{
+        } else {
             viewHolder.headline.setText(null);
         }
         if (notification.extras.get(Constants.NOTIFICATION_CONTENT) != null) {
             viewHolder.description.setText(notification.extras.get(Constants.NOTIFICATION_CONTENT).toString());
-        }else{
+        } else {
             viewHolder.description.setText(null);
         }
         // Set the icon

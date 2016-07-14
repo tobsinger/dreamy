@@ -141,14 +141,16 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         setContentView(R.layout.daydream_layout);
         final NotificationListAdapter adapter = new NotificationListAdapter(this);
+        final Settings settings = settingsDao.getSettings(this);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setAlpha(settings.getNotificationVisibility());
         timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
         timelyClock.setOnClickListener(this);
         batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
         batteryIcon = (ImageView) findViewById(R.id.batteryIcon);
-        final Settings settings = settingsDao.getSettings(this);
+
 
         if (settings.isShowBatteryStatus()) {
             findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);

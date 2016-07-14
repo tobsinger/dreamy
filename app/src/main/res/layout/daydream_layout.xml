@@ -106,7 +106,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10pt"
         android:layout_marginStart="10pt"
-        android:alpha=".6"
         android:background="#ffffffff"
         android:divider="#ff000000"
         android:dividerHeight="2pt"/>

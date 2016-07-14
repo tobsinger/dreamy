@@ -5,7 +5,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -33,11 +35,15 @@ public class DreamySettingsActivity extends Activity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+
+//        Debug.waitForDebugger();
         super.onCreate(savedInstanceState);
 
         DreamyApplication.getDreamyComponent().inject(this);
-        final Settings settings = settingsDao.getSettings(this);
         setContentView(R.layout.dream_settings);
+
+        final Settings settings = settingsDao.getSettings(this);
+        final SeekBar notificationsDimBar = (SeekBar) findViewById(R.id.notificationsDimBar);
 
         // End day dream on click on clock
         final Switch endOnTimeClickSwitch = (Switch) findViewById(R.id.endOnTimeClickSwitch);
@@ -56,14 +62,38 @@ public class DreamySettingsActivity extends Activity {
         showNotificationsSwitch.setChecked(settings.isShowNotifications());
         showNotificationsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean showNotifications) {
                 final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
-                settings.setShowNotifications(b);
+                settings.setShowNotifications(showNotifications);
+                notificationsDimBar.setEnabled(showNotifications);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
-                if (b && !isNLServiceRunning()) {
+                if (showNotifications && !isNLServiceRunning()) {
                     Toast.makeText(DreamySettingsActivity.this, R.string.requestNotificationAccessMsg, Toast.LENGTH_LONG).show();
                     startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
                 }
+            }
+        });
+
+
+        // Notification visibility
+        notificationsDimBar.setProgress((int) (settings.getNotificationVisibility() * 100));
+        notificationsDimBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
+                float newValue = (float) i;
+                newValue = newValue / 100;
+                settings.setNotificationVisibility(newValue);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(final SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+
             }
         });
 

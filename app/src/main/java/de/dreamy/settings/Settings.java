@@ -8,28 +8,34 @@ public class Settings {
     /**
      * Should the device wake up when the user clicks on the time?
      */
-    private boolean wakeOnTimeClick;
+    private boolean wakeOnTimeClick = false;
 
     /**
      * Should the day dream display notifications
      */
-    private boolean showNotifications;
+    private boolean showNotifications = false;
 
 
     /**
      * Should the battery status be displayed
      */
-    private boolean showBatteryStatus;
+    private boolean showBatteryStatus = true;
 
     /**
      * Should the wifi status be displayed
      */
-    private boolean showWifiStatus;
+    private boolean showWifiStatus = true;
 
     /**
      * Should the network carrier name be displayed
      */
-    private boolean showCarrierName;
+    private boolean showCarrierName = true;
+
+
+    /**
+     * The alpha value of a notification
+     */
+    private float notificationVisibility = (float) .8;
 
 
     public boolean isWakeOnTimeClick() {
@@ -70,5 +76,13 @@ public class Settings {
 
     public void setShowCarrierName(final boolean showCarrierName) {
         this.showCarrierName = showCarrierName;
+    }
+
+    public float getNotificationVisibility() {
+        return notificationVisibility;
+    }
+
+    public void setNotificationVisibility(final float notificationVisibility) {
+        this.notificationVisibility = notificationVisibility;
     }
 }
