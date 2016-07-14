@@ -11,11 +11,12 @@ import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
-import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,23 +55,39 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      */
     private ListView listView;
     /**
-     * Needed to receive updates about the notification list
+     * The animated clock
      */
-    private LocalBroadcastManager localBroadcastManager;
-
     private TimelyClock timelyClock;
-    private TextView batteryPercentage;
-    private ImageView chargingIcon;
 
+    /**
+     * The field to display the current battery level
+     */
+    private TextView batteryPercentage;
+    /**
+     * The battery icon
+     */
+    private ImageView batteryIcon;
+
+    /**
+     * Broadcast receiver to handle incoming notifications
+     */
     private BroadcastReceiver notificationBroadcastReceiver = new BroadcastReceiver() {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onReceive(Context context, Intent intent) {
             displayNotifications();
         }
     };
 
-
+    /**
+     * Broadcast receiver to handle battery state change events
+     */
     private BroadcastReceiver batteryBroadcastReceiver = new BroadcastReceiver() {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onReceive(Context context, Intent batteryStatus) {
             // Are we charging / charged?
@@ -82,8 +99,13 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int batteryPct = (int) (level / (float) scale * 100);
 
-            if (chargingIcon != null) {
-                chargingIcon.setVisibility(isCharging ? View.VISIBLE : View.GONE);
+            if (batteryIcon != null) {
+                batteryIcon.setVisibility(View.VISIBLE);
+                if (isCharging) {
+                    batteryIcon.setImageResource(R.drawable.ic_battery_charging_full_white_48dp);
+                } else {
+                    batteryIcon.setImageResource(R.drawable.ic_battery_full_white_48dp);
+                }
             }
             if (batteryPercentage != null) {
                 batteryPercentage.setText(batteryPct + "%");
@@ -124,10 +146,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         listView.setOnItemClickListener(this);
         timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
         timelyClock.setOnClickListener(this);
-
         batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
-        chargingIcon = (ImageView) findViewById(R.id.chargingIcon);
+        batteryIcon = (ImageView) findViewById(R.id.batteryIcon);
         final Settings settings = settingsDao.getSettings(this);
+
         if (settings.isShowBatteryStatus()) {
             findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);
         }
@@ -154,15 +176,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 //        Debug.waitForDebugger();
     }
 
+
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        localBroadcastManager.unregisterReceiver(notificationBroadcastReceiver);
-    }
-
     @Override
     public void onClick(View v) {
         if (timelyClock.equals(v) && settingsDao.getSettings(this).isWakeOnTimeClick()) {
@@ -182,12 +199,19 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
     }
 
+
+    @Override
+    public void onDetachedFromWindow() {
+        this.unregisterReceiver(batteryBroadcastReceiver);
+        this.unregisterReceiver(notificationBroadcastReceiver);
+        super.onDetachedFromWindow();
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onitemclick");
         final StatusBarNotification notification = (StatusBarNotification) parent.getAdapter().getItem(position);
         try {
             notification.getNotification().contentIntent.send();
@@ -205,19 +229,17 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     private void initBroadcastManager() {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.registerReceiver(notificationBroadcastReceiver, filter);
+        this.registerReceiver(notificationBroadcastReceiver, filter);
 
         if (settingsDao.getSettings(this).isShowBatteryStatus()) {
-            final IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-            this.registerReceiver(batteryBroadcastReceiver, ifilter);
+            final IntentFilter batteryStatusIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            this.registerReceiver(batteryBroadcastReceiver, batteryStatusIntentFilter);
         }
     }
 
     /**
      * Get the current list of status bar notifications, remove duplicates and display the rest in the list view
      */
-
     private void displayNotifications() {
         final List<StatusBarNotification> allNotifications = NotificationListener.getNotifications();
         final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
@@ -225,8 +247,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
-            if (!notifications.contains(singleNotificationIdentifier) && ((isOnlyNotificationWithGroupKey(n, allNotifications))
-                    || (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC || n.getNotification().publicVersion != null))) {
+            if (!notifications.contains(singleNotificationIdentifier)
+                    && ((isOnlyNotificationWithGroupKey(n, allNotifications))
+                    || (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC
+                    || n.getNotification().publicVersion != null))) {
                 filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
             }
@@ -236,11 +260,19 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
     }
 
-    private boolean isOnlyNotificationWithGroupKey(final StatusBarNotification notification, final List<StatusBarNotification> allNotificatoins) {
+
+    /**
+     * Check if there isn't a public notification with the same group key
+     *
+     * @param notification     The notification to find a public version for
+     * @param allNotifications The list of all  notifications
+     * @return True if there is no public version of the notification
+     */
+    private boolean isOnlyNotificationWithGroupKey(final StatusBarNotification notification, final List<StatusBarNotification> allNotifications) {
         if (TextUtils.isEmpty(notification.getGroupKey())) {
             return true;
         }
-        for (final StatusBarNotification singleNotification : allNotificatoins) {
+        for (final StatusBarNotification singleNotification : allNotifications) {
             if (!notification.equals(singleNotification) && notification.getGroupKey().equals(singleNotification.getGroupKey())) {
                 if ((singleNotification.getNotification().visibility == Notification.VISIBILITY_PUBLIC || singleNotification.getNotification().publicVersion != null)) {
                     return false;
@@ -257,7 +289,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * @param notification The notification to generate an identifier for
      * @return The generated identifier
      */
-    private int getNotificationIdentifier(Notification notification) {
+    private int getNotificationIdentifier(final Notification notification) {
         final Date date = new Date(notification.when);
         final String dateString = new SimpleDateFormat(Constants.TIME_PATTERN, Locale.GERMANY).format(date);
         final Bundle extras = notification.extras;
@@ -280,16 +312,32 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
                 if (!networkInfo.isConnected()) {
                     continue;
                 }
-                String wifiName = connManager.getNetworkInfo(singleNetwork).getExtraInfo();
-//                if ("\"".equals(wifiName.charAt(0))) {
-//                    wifiName = wifiName.substring(1, wifiName.length());
-//                }
-                return wifiName;
+                if (networkInfo.isConnected()) {
+                    final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+                    final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+
+                    if (connectionInfo != null) {
+                        String ssid = connectionInfo.getSSID();
+                        String quotes = String.valueOf('"');
+                        if (ssid.startsWith(quotes)) {
+                            ssid = ssid.substring(1, ssid.length());
+                        }
+                        if (ssid.endsWith(quotes)) {
+                            ssid = ssid.substring(0, ssid.length() - 1);
+                        }
+                        return ssid;
+                    }
+                }
             }
         }
         return null;
     }
 
+    /**
+     * Get the name of the current carrier
+     *
+     * @return A string with the carrier's name
+     */
     private String getCarrierName() {
         final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         final String carrierName = manager.getNetworkOperatorName();

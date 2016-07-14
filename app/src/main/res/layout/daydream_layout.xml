@@ -53,13 +53,13 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/chargingIcon"
+                android:id="@+id/batteryIcon"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_battery_charging_full_white_48dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:src="@drawable/ic_battery_full_white_48dp"/>
 
             <TextView
                 android:id="@+id/batteryPercentage"
@@ -106,7 +106,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10pt"
         android:layout_marginStart="10pt"
-        android:alpha=".7"
+        android:alpha=".6"
         android:background="#ffffffff"
         android:divider="#ff000000"
         android:dividerHeight="2pt"/>
