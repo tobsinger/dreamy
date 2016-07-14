@@ -1,6 +1,7 @@
 package de.dreamy.notifications;
 
 import android.content.Intent;
+import android.os.Debug;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -8,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreamy.Constants;
@@ -42,7 +44,7 @@ public class NotificationListener extends NotificationListenerService {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         final int show_all = Settings.Secure.getInt(getContentResolver(), "lock_screen_allow_private_notifications", -1);
         final int noti_enabled = Settings.Secure.getInt(getContentResolver(), "lock_screen_show_notifications", -1);
-
+//        Debug.waitForDebugger();
         Log.d(TAG, "show notifications on lock screen: " + (noti_enabled > 0 ? "yes" : "no") + ", show private info: " + (show_all > 0 ? "yes" : "no"));
     }
 
@@ -79,9 +81,7 @@ public class NotificationListener extends NotificationListenerService {
     private void notificationUpdate() {
         notifications.clear();
         final StatusBarNotification[] activeNotifications = getActiveNotifications();
-        for (StatusBarNotification notification : activeNotifications) {
-            notifications.add(notification);
-        }
+        Collections.addAll(notifications, activeNotifications);
         localBroadcastManager.sendBroadcast(new Intent(Constants.INTENT_FILTER_NOTIFICATION_UPDATE));
     }
 }

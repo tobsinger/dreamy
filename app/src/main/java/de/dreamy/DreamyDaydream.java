@@ -24,17 +24,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import de.dreamy.notifications.NotificationListener;
+import de.dreamy.settings.SettingsDao;
+import de.dreamy.view.TimelyClock;
 import de.dreamy.view.adapters.NotificationListAdapter;
 
 
 /**
  * The actual day dream service implementation
  */
-public class DreamyDaydream extends DreamService implements AdapterView.OnItemClickListener {
+public class DreamyDaydream extends DreamService implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private final String TAG = DreamyDaydream.class.getCanonicalName();
 
+    @Inject
+    SettingsDao settingsDao;
     /**
      * The list that holds the notification views
      */
@@ -43,6 +49,8 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * Needed to receive updates about the notification list
      */
     private LocalBroadcastManager localBroadcastManager;
+
+    private TimelyClock timelyClock;
 
     private BroadcastReceiver bcr = new BroadcastReceiver() {
         @Override
@@ -58,6 +66,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     @Override
     public void onCreate() {
         super.onCreate();
+
+        DreamyApplication.getDreamyComponent().inject(this);
+
         Log.d(TAG, "creating daydream service");
         initBroadcastManager();
     }
@@ -80,6 +91,8 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
+        timelyClock.setOnClickListener(this);
 //        Debug.waitForDebugger();
     }
 
@@ -92,11 +105,14 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         localBroadcastManager.unregisterReceiver(bcr);
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        Log.d("test", "klick");
-//        //this.finish();
-//    }
+    @Override
+    public void onClick(View v) {
+
+        if (timelyClock.equals(v) && settingsDao.getSettings(this).isWakeOnTimeClick()) {
+            this.finish();
+        }
+        //this.finish();
+    }
 
     /**
      * {@inheritDoc}
@@ -104,7 +120,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     @Override
     public void onDreamingStarted() {
         super.onDreamingStarted();
-        displayNotifications();
+
+        if (settingsDao.getSettings(this).isShowNotifications()) {
+            displayNotifications();
+        }
     }
 
     /**

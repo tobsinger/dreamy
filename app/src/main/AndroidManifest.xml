@@ -36,7 +36,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".settings.DreamySettingsActivity"></activity>
+        <activity android:name=".settings.DreamySettingsActivity"/>
 
     </application>
 

@@ -6,6 +6,7 @@
     </style>
 
     <style name="SettingsLabel">
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textSize">16dp</item>
     </style>
 
