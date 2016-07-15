@@ -152,7 +152,7 @@ public class DreamySettingsActivity extends Activity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 // permission not granted
-                if (hasPermission(Manifest.permission.READ_PHONE_STATE)
+                if (!hasPermission(Manifest.permission.READ_PHONE_STATE)
                         ) {
                     ActivityCompat.requestPermissions(DreamySettingsActivity.this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
@@ -187,6 +187,6 @@ public class DreamySettingsActivity extends Activity {
     private boolean hasPermission(String permission) {
         return ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
                 permission)
-                != PackageManager.PERMISSION_GRANTED;
+                == PackageManager.PERMISSION_GRANTED;
     }
 }
