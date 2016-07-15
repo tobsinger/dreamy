@@ -29,7 +29,7 @@ public class Settings {
     /**
      * Should the network carrier name be displayed
      */
-    private boolean showCarrierName = true;
+    private boolean showCarrierName = false;
 
 
     /**

@@ -1,11 +1,14 @@
 package de.dreamy.settings;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Debug;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -35,8 +38,6 @@ public class DreamySettingsActivity extends Activity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-
-//        Debug.waitForDebugger();
         super.onCreate(savedInstanceState);
 
         DreamyApplication.getDreamyComponent().inject(this);
@@ -51,7 +52,6 @@ public class DreamySettingsActivity extends Activity {
         endOnTimeClickSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
                 settings.setWakeOnTimeClick(b);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
@@ -59,21 +59,23 @@ public class DreamySettingsActivity extends Activity {
 
         // Show notifications
         final Switch showNotificationsSwitch = (Switch) findViewById(R.id.displayNotificationsSwitch);
-        showNotificationsSwitch.setChecked(settings.isShowNotifications());
+        showNotificationsSwitch.setChecked(settings.isShowNotifications() && isNLServiceRunning());
         showNotificationsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean showNotifications) {
-                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
-                settings.setShowNotifications(showNotifications);
-                notificationsDimBar.setEnabled(showNotifications);
-                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+                // permission not granted
                 if (showNotifications && !isNLServiceRunning()) {
                     Toast.makeText(DreamySettingsActivity.this, R.string.requestNotificationAccessMsg, Toast.LENGTH_LONG).show();
                     startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                    showNotificationsSwitch.setChecked(false);
+                    return;
                 }
+
+                settings.setShowNotifications(showNotifications);
+                notificationsDimBar.setEnabled(showNotifications);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
-
 
         // Notification visibility
         notificationsDimBar.setProgress((int) (settings.getNotificationVisibility() * 100));
@@ -88,18 +90,15 @@ public class DreamySettingsActivity extends Activity {
 
             @Override
             public void onStartTrackingTouch(final SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
-
             }
         });
 
-
         // Screen Brightness
-        final SeekBar brightnessBar= (SeekBar) findViewById(R.id.displayDimBar);
+        final SeekBar brightnessBar = (SeekBar) findViewById(R.id.displayDimBar);
         brightnessBar.setProgress((int) (settings.getScreenBrightness() * 100));
         brightnessBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -112,12 +111,10 @@ public class DreamySettingsActivity extends Activity {
 
             @Override
             public void onStartTrackingTouch(final SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
-
             }
         });
 
@@ -133,7 +130,6 @@ public class DreamySettingsActivity extends Activity {
             }
         });
 
-
         // Show wifi info
         final Switch showWifiSwitch = (Switch) findViewById(R.id.showWifiStatusSwitch);
         showWifiSwitch.setChecked(settings.isShowWifiStatus());
@@ -148,22 +144,39 @@ public class DreamySettingsActivity extends Activity {
 
         // Show carrier info
         final Switch showCarrierSwitch = (Switch) findViewById(R.id.showCarrierSwitch);
-        showCarrierSwitch.setChecked(settings.isShowCarrierName());
+        if (ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
+                Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+            showCarrierSwitch.setChecked(settings.isShowCarrierName()
+                    && ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
+                    Manifest.permission.READ_PHONE_STATE)
+                    != PackageManager.PERMISSION_GRANTED);
+        }
         showCarrierSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                // permission not granted
+                if (ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
+                        Manifest.permission.READ_PHONE_STATE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(DreamySettingsActivity.this,
+                            new String[]{Manifest.permission.READ_PHONE_STATE},
+                            4711);
+                    compoundButton.setChecked(false);
+                    return;
+                }
+
                 final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
                 settings.setShowCarrierName(b);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
-
-
     }
 
-
     /**
-     * Check if the notification listener service is running
+     * Check if the notification listener service is running.
+     * This indicates if the user has given the app the right to access the notifications
      *
      * @return true if the service is running
      */

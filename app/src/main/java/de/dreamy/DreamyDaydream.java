@@ -1,5 +1,6 @@
 package de.dreamy;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -17,7 +19,10 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -70,13 +75,19 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      */
     private ImageView batteryIcon;
 
+
+    /**
+     * the name of the current carrier
+     */
+    private TextView carrierTextView;
+
     private LocalBroadcastManager localBroadcastManager;
 
 
     /**
      * Broadcast receiver to handle incoming notifications
      */
-    private BroadcastReceiver notificationBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver notificationBroadcastReceiver = new BroadcastReceiver() {
         /**
          * {@inheritDoc}
          */
@@ -89,7 +100,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     /**
      * Broadcast receiver to handle battery state change events
      */
-    private BroadcastReceiver batteryBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver batteryBroadcastReceiver = new BroadcastReceiver() {
         /**
          * {@inheritDoc}
          */
@@ -115,6 +126,17 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             if (batteryPercentage != null) {
                 batteryPercentage.setText(batteryPct + "%");
             }
+        }
+    };
+
+
+    private final PhoneStateListener phoneStateListener = new PhoneStateListener() {
+
+        @Override
+        public void onServiceStateChanged(final ServiceState serviceState) {
+
+            carrierTextView.setText(serviceState.getOperatorAlphaShort());
+            Log.d(TAG, serviceState.toString());
         }
     };
 
@@ -161,6 +183,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         timelyClock.setOnClickListener(this);
         batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
         batteryIcon = (ImageView) findViewById(R.id.batteryIcon);
+        carrierTextView = (TextView) findViewById(R.id.carrierName);
 
 
         if (settings.isShowBatteryStatus()) {
@@ -182,7 +205,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
 
         if (settings.isShowCarrierName()) {
-            final TextView carrierTextView = (TextView) findViewById(R.id.carrierName);
+
             carrierTextView.setVisibility(View.VISIBLE);
             carrierTextView.setText(getCarrierName());
         }
@@ -191,7 +214,25 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             updateBatteryLevel();
         }
 
-//        Debug.waitForDebugger();
+
+        final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+
+
+        if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+
+
+            telephonyManager.listen(phoneStateListener,
+//                    PhoneStateListener.LISTEN_CALL_FORWARDING_INDICATOR |
+//                            PhoneStateListener.LISTEN_CALL_STATE |
+//                            PhoneStateListener.LISTEN_DATA_ACTIVITY |
+//                            PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
+//                            PhoneStateListener.LISTEN_MESSAGE_WAITING_INDICATOR |
+                    PhoneStateListener.LISTEN_SERVICE_STATE
+//                                    |
+//                            PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
+            );
+        }
     }
 
 
@@ -223,7 +264,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     @Override
     public void onDetachedFromWindow() {
         this.unregisterReceiver(batteryBroadcastReceiver);
-        localBroadcastManager.unregisterReceiver(notificationBroadcastReceiver);
+        if (localBroadcastManager != null) {
+            localBroadcastManager.unregisterReceiver(notificationBroadcastReceiver);
+        }
         super.onDetachedFromWindow();
     }
 
@@ -239,7 +282,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         } catch (PendingIntent.CanceledException e) {
             Log.d(TAG, "intent canceled");
         }
-
     }
 
     /**
@@ -266,7 +308,8 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * Get the current list of status bar notifications, remove duplicates and display the rest in the list view
      */
     private void displayNotifications() {
-        final List<StatusBarNotification> allNotifications = NotificationListener.getNotifications();
+        final List<StatusBarNotification> allNotifications = new ArrayList<>();
+        allNotifications.addAll(NotificationListener.getNotifications());
         final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
         final List<Integer> notifications = new ArrayList<>();
 
@@ -380,5 +423,4 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         batteryBroadcastReceiver.onReceive(this, batteryIntent);
     }
-
 }
