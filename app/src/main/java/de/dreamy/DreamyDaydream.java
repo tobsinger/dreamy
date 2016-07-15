@@ -187,6 +187,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             carrierTextView.setText(getCarrierName());
         }
 
+        if (settings.isShowBatteryStatus()) {
+            updateBatteryLevel();
+        }
 
 //        Debug.waitForDebugger();
     }
@@ -214,7 +217,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDetachedFromWindow() {
         this.unregisterReceiver(batteryBroadcastReceiver);
@@ -242,14 +247,16 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      * new status bar notifications
      */
     private void initBroadcastManager() {
+        final Settings settings = settingsDao.getSettings(this);
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        if (settings.isShowNotifications()) {
+            localBroadcastManager = LocalBroadcastManager.getInstance(this);
+            final IntentFilter filter = new IntentFilter();
+            filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
+            localBroadcastManager.registerReceiver(notificationBroadcastReceiver, filter);
+        }
 
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.INTENT_FILTER_NOTIFICATION_UPDATE);
-        localBroadcastManager.registerReceiver(notificationBroadcastReceiver, filter);
-
-        if (settingsDao.getSettings(this).isShowBatteryStatus()) {
+        if (settings.isShowBatteryStatus()) {
             final IntentFilter batteryStatusIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
             this.registerReceiver(batteryBroadcastReceiver, batteryStatusIntentFilter);
         }
@@ -351,6 +358,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         return null;
     }
 
+
     /**
      * Get the name of the current carrier
      *
@@ -360,6 +368,17 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         final String carrierName = manager.getNetworkOperatorName();
         return carrierName;
+    }
+
+
+    /**
+     * Get the current battery level and send it to the receiver
+     *
+     * @return
+     */
+    public void updateBatteryLevel() {
+        final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        batteryBroadcastReceiver.onReceive(this, batteryIntent);
     }
 
 }
