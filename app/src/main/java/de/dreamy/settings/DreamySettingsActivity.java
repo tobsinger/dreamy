@@ -97,6 +97,30 @@ public class DreamySettingsActivity extends Activity {
             }
         });
 
+
+        // Screen Brightness
+        final SeekBar brightnessBar= (SeekBar) findViewById(R.id.displayDimBar);
+        brightnessBar.setProgress((int) (settings.getScreenBrightness() * 100));
+        brightnessBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
+                float newValue = (float) i;
+                newValue = newValue / 100;
+                settings.setScreenBrightness(newValue);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(final SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+
+            }
+        });
+
         // Show battery info
         final Switch showBatterySwitch = (Switch) findViewById(R.id.showBatteryStatusSwitch);
         showBatterySwitch.setChecked(settings.isShowBatteryStatus());

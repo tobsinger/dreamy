@@ -8,4 +8,5 @@
     <string name="displayWifiStatus">Zeige WLAN Status</string>
     <string name="displayCarrierName">Anbieternamen anzeigen</string>
     <string name="notificatoinsVisibility">Sichtbarkeit der Benachrichtigungen</string>
+    <string name="screen_brightness">Bildschirmhelligkeit</string>
 </resources>

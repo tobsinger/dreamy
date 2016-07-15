@@ -37,6 +37,11 @@ public class Settings {
      */
     private float notificationVisibility = (float) .8;
 
+    /**
+     * The screen brightness
+     */
+    private float screenBrightness = (float) .8;
+
 
     public boolean isWakeOnTimeClick() {
         return wakeOnTimeClick;
@@ -84,5 +89,14 @@ public class Settings {
 
     public void setNotificationVisibility(final float notificationVisibility) {
         this.notificationVisibility = notificationVisibility;
+    }
+
+
+    public float getScreenBrightness() {
+        return screenBrightness;
+    }
+
+    public void setScreenBrightness(final float screenBrightness) {
+        this.screenBrightness = screenBrightness;
     }
 }

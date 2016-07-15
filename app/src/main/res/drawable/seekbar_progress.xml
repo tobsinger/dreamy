@@ -1,0 +1,25 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@android:id/background">
+        <stroke
+            android:width="1dp"
+            android:color="#50999999"/>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <stroke
+            android:width="1dp"
+            android:color="#50999999"/>
+    </item>
+    <item android:id="@android:id/progress">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+               android:shape="oval">
+
+            <stroke
+                android:width="1dp"
+                android:color="#50999999"/>
+
+        </shape>
+    </item>
+
+</layer-list>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/black"
-              android:orientation="vertical">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:orientation="vertical">
 
 
     <TableLayout
@@ -11,95 +11,30 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
 
-            <TextView
-                style="@style/SettingsLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="3dip"
-                android:text="@string/unlock_on_time_click"
-                android:textColor="@android:color/white"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <Switch
-                android:id="@+id/endOnTimeClickSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:gravity="end"/>
-
-        </TableRow>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
-
-            <TextView
-                style="@style/SettingsLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="3dip"
-                android:text="@string/displayNotifications"
-                android:textColor="@android:color/white"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <Switch
-                android:id="@+id/displayNotificationsSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"/>
-
-
-        </TableRow>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
-
-
+        <!-- display brightness -->
         <RelativeLayout
+            style="@style/SettingsEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
+            android:layout_height="wrap_content">
 
             <SeekBar
-                android:id="@+id/notificationsDimBar"
+                android:id="@+id/displayDimBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:background="@drawable/seekbar_background"
                 android:max="100"
                 android:minWidth="100dp"/>
 
             <TextView
-                android:id="@+id/notificationDimLabel"
+                android:id="@+id/displayDimLabel"
                 style="@style/SettingsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/notificationsDimBar"
-                android:padding="3dip"
-                android:text="@string/notificatoinsVisibility"
-                android:textColor="@android:color/white"/>
+                android:layout_toStartOf="@id/displayDimBar"
+                android:text="@string/screen_brightness"/>
 
         </RelativeLayout>
 
@@ -108,18 +43,17 @@
             android:layout_height="1dip"
             android:background="#FF212121"/>
 
+        <!-- Unlock on click on time -->
         <TableRow
+            style="@style/SettingsEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dip"
-                android:text="@string/displayBatteryStatus"
-                android:textColor="@android:color/white"/>
+                android:text="@string/unlock_on_time_click"/>
 
             <Space
                 android:layout_width="0dp"
@@ -127,10 +61,40 @@
                 android:layout_weight="1"/>
 
             <Switch
-                android:id="@+id/showBatteryStatusSwitch"
+                android:id="@+id/endOnTimeClickSwitch"
+                style="@style/SettingsSwitch"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
+
+        <!-- Display notifications -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"/>
+                android:text="@string/displayNotifications"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Switch
+                android:id="@+id/displayNotificationsSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
 
         </TableRow>
@@ -140,11 +104,73 @@
             android:layout_height="1dip"
             android:background="#FF212121"/>
 
-
-        <TableRow
+        <!-- Notification brightness -->
+        <RelativeLayout
+            style="@style/SettingsEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
+            android:layout_height="wrap_content">
+
+            <SeekBar
+                android:id="@+id/notificationsDimBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/seekbar_background"
+                android:max="100"
+                android:minWidth="100dp"/>
+
+            <TextView
+                android:id="@+id/notificationDimLabel"
+                style="@style/SettingsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/notificationsDimBar"
+                android:text="@string/notificatoinsVisibility"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
+
+        <!-- Battery status -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/displayBatteryStatus"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Switch
+                android:id="@+id/showBatteryStatusSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </TableRow>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#FF212121"/>
+
+        <!-- Wifi name -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsLabel"
@@ -161,9 +187,9 @@
 
             <Switch
                 android:id="@+id/showWifiStatusSwitch"
+                style="@style/SettingsSwitch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"/>
+                android:layout_height="wrap_content"/>
 
         </TableRow>
 
@@ -172,19 +198,17 @@
             android:layout_height="1dip"
             android:background="#FF212121"/>
 
-
+        <!-- Carrier name -->
         <TableRow
+            style="@style/SettingsEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="72dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dip"
-                android:text="@string/displayCarrierName"
-                android:textColor="@android:color/white"/>
+                android:text="@string/displayCarrierName"/>
 
             <Space
                 android:layout_width="0dp"
@@ -193,9 +217,9 @@
 
             <Switch
                 android:id="@+id/showCarrierSwitch"
+                style="@style/SettingsSwitch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"/>
+                android:layout_height="wrap_content"/>
 
         </TableRow>
 
@@ -206,4 +230,4 @@
 
     </TableLayout>
 
-</LinearLayout>
+</ScrollView>

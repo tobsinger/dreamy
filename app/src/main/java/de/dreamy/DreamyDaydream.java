@@ -22,6 +22,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -137,15 +138,21 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     public void onAttachedToWindow() {
         //setup daydream
         super.onAttachedToWindow();
+        final Settings settings = settingsDao.getSettings(this);
 
+        // Change Screen brightness
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = settings.getScreenBrightness();
+        getWindow().setAttributes(layout);
         setInteractive(true);
         setFullscreen(true);
+
 
         final Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         setContentView(R.layout.daydream_layout);
         final NotificationListAdapter adapter = new NotificationListAdapter(this);
-        final Settings settings = settingsDao.getSettings(this);
+
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -179,6 +186,8 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             carrierTextView.setVisibility(View.VISIBLE);
             carrierTextView.setText(getCarrierName());
         }
+
+
 //        Debug.waitForDebugger();
     }
 
