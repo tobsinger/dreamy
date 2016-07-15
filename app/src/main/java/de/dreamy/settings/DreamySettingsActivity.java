@@ -144,22 +144,16 @@ public class DreamySettingsActivity extends Activity {
 
         // Show carrier info
         final Switch showCarrierSwitch = (Switch) findViewById(R.id.showCarrierSwitch);
-        if (ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
-                Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-            showCarrierSwitch.setChecked(settings.isShowCarrierName()
-                    && ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
-                    Manifest.permission.READ_PHONE_STATE)
-                    != PackageManager.PERMISSION_GRANTED);
-        }
+        showCarrierSwitch.setChecked(settings.isShowCarrierName()
+                && hasPermission(Manifest.permission.READ_PHONE_STATE));
+
         showCarrierSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 // permission not granted
-                if (ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
-                        Manifest.permission.READ_PHONE_STATE)
-                        != PackageManager.PERMISSION_GRANTED) {
+                if (hasPermission(Manifest.permission.READ_PHONE_STATE)
+                        ) {
                     ActivityCompat.requestPermissions(DreamySettingsActivity.this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
                             4711);
@@ -188,5 +182,11 @@ public class DreamySettingsActivity extends Activity {
             }
         }
         return false;
+    }
+
+    private boolean hasPermission(String permission) {
+        return ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
+                permission)
+                != PackageManager.PERMISSION_GRANTED;
     }
 }
