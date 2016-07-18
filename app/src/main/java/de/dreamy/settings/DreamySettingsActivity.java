@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -101,20 +102,30 @@ public class DreamySettingsActivity extends Activity {
         final SeekBar brightnessBar = (SeekBar) findViewById(R.id.displayDimBar);
         brightnessBar.setProgress((int) (settings.getScreenBrightness() * 100));
         brightnessBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private float initialBrightness;
+
             @Override
             public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
-                float newValue = (float) i;
-                newValue = newValue / 100;
+                final float newValue = i / 100f;
                 settings.setScreenBrightness(newValue);
+                WindowManager.LayoutParams layout = getWindow().getAttributes();
+                layout.screenBrightness = newValue;
+                getWindow().setAttributes(layout);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
 
             @Override
             public void onStartTrackingTouch(final SeekBar seekBar) {
+                WindowManager.LayoutParams layout = getWindow().getAttributes();
+                initialBrightness = layout.screenBrightness;
+                layout.screenBrightness = settings.getScreenBrightness();
             }
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
+                WindowManager.LayoutParams layout = getWindow().getAttributes();
+                layout.screenBrightness = initialBrightness;
+                getWindow().setAttributes(layout);
             }
         });
 
