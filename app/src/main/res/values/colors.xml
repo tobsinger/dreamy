@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="main" type="color">#3E7F9E</item>
+    <item name="alt" type="color">#2A566B</item>
+    <item name="accent" type="color">#98787C</item>
     <item name="blue" type="color">#FF33B5E5</item>
     <item name="purple" type="color">#FFAA66CC</item>
     <item name="green" type="color">#FF99CC00</item>
@@ -13,6 +15,9 @@
     <item name="darkred" type="color">#FFCC0000</item>
     <item name="white" type="color">#FFFFFF</item>
     <item name="black" type="color">#000000</item>
+    <item name="gray" type="color">#9f9f9f</item>
+    <item name="lightGray" type="color">#cecece</item>
+
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>

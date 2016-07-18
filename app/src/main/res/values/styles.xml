@@ -10,15 +10,27 @@
         <item name="colorControlNormal">@color/purple</item>
         <item name="colorControlActivated">@color/purple</item>
         <item name="colorControlHighlight">@color/purple</item>
-        <item name="android:thumbTint">@color/main</item>
+        <item name="android:colorControlActivated">@color/main</item>
+        <item name="android:colorButtonNormal">@color/gray</item>
+        <item name="android:colorControlNormal">@color/gray</item>
+        <item name="android:colorPrimaryDark">@color/alt</item>
+        <item name="android:colorPrimary">@color/main</item>
+        <item name="android:colorBackground">@color/lightGray</item>
+        <item name="android:colorControlHighlight">@color/main</item>
+        <item name="android:textColor">@color/main</item>
 
+    </style>
+
+    <style name="thinLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dip</item>
+        <item name="android:background">@color/gray</item>
     </style>
 
     <style name="SettingsLabel">
         <item name="android:textSize">16dp</item>
         <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">center_vertical|start</item>
     </style>
 
@@ -27,6 +39,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_gravity">center_vertical|end</item>
+
     </style>
 
     <style name="SettingsEntry">

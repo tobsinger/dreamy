@@ -2,14 +2,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/black"
             android:orientation="vertical">
 
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
 
         <!-- display brightness -->
@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/seekbar_background"
                 android:max="100"
                 android:minWidth="100dp"/>
 
@@ -38,10 +37,7 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
         <!-- Unlock on click on time -->
         <TableRow
@@ -68,10 +64,7 @@
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
         <!-- Display notifications -->
         <TableRow
@@ -99,10 +92,7 @@
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
         <!-- Notification brightness -->
         <RelativeLayout
@@ -116,7 +106,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/seekbar_background"
                 android:max="100"
                 android:minWidth="100dp"/>
 
@@ -130,10 +119,7 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
         <!-- Battery status -->
         <TableRow
@@ -162,9 +148,7 @@
         </TableRow>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+            style="@style/thinLine"/>
 
         <!-- Wifi name -->
         <TableRow
@@ -177,8 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dip"
-                android:text="@string/displayWifiStatus"
-                android:textColor="@android:color/white"/>
+                android:text="@string/displayWifiStatus"/>
 
             <Space
                 android:layout_width="0dp"
@@ -193,10 +176,7 @@
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
         <!-- Carrier name -->
         <TableRow
@@ -223,10 +203,7 @@
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#FF212121"/>
+        <View style="@style/thinLine"/>
 
     </TableLayout>
 
