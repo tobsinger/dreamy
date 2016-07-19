@@ -100,13 +100,13 @@
 
     <ListView
         android:id="@+id/listView"
+        android:layoutAnimation="@anim/example"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/statusBarIcons"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10pt"
         android:layout_marginStart="10pt"
-        android:background="#ffffffff"
         android:divider="#ff000000"
         android:dividerHeight="2pt"/>
 

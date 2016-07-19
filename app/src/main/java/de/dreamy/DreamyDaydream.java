@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -170,11 +171,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         setInteractive(true);
         setFullscreen(true);
 
-
         final Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         setContentView(R.layout.daydream_layout);
-        final NotificationListAdapter adapter = new NotificationListAdapter(this);
+        final NotificationListAdapter adapter = new NotificationListAdapter(this, new ArrayList());
 
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
@@ -185,7 +185,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
         batteryIcon = (ImageView) findViewById(R.id.batteryIcon);
         carrierTextView = (TextView) findViewById(R.id.carrierName);
-
 
         if (settings.isShowBatteryStatus()) {
             findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);
@@ -202,7 +201,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             } else {
                 wifiInfo.setVisibility(View.GONE);
             }
-
         }
 
         if (settings.isShowCarrierName()) {
@@ -216,23 +214,14 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             updateBatteryLevel();
         }
 
-
         final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-
 
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE)) {
 
 
             telephonyManager.listen(phoneStateListener,
-//                    PhoneStateListener.LISTEN_CALL_FORWARDING_INDICATOR |
-//                            PhoneStateListener.LISTEN_CALL_STATE |
-//                            PhoneStateListener.LISTEN_DATA_ACTIVITY |
-//                            PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
-//                            PhoneStateListener.LISTEN_MESSAGE_WAITING_INDICATOR |
                     PhoneStateListener.LISTEN_SERVICE_STATE
-//                                    |
-//                            PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
             );
         }
     }
