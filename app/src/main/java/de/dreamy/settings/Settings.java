@@ -44,7 +44,7 @@ public class Settings {
      */
     private float screenBrightness = (float) .8;
 
-    private ConnectionType connectionType = ConnectionType.BOTH;
+    private ConnectionType connectionType = ConnectionType.ALWAYS;
 
 
     public boolean isWakeOnTimeClick() {
@@ -115,7 +115,7 @@ public class Settings {
     public enum ConnectionType {
         CHARGER(R.string.connectionTypeCharger),
         PC(R.string.connectionTypePC),
-        BOTH(R.string.connectionTypeBoth);
+        ALWAYS(R.string.connectionTypeAlways);
 
         public final int stringId;
 

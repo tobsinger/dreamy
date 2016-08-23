@@ -412,7 +412,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
     private boolean isDaydreamDisabled(Settings settings) {
         final Settings.ConnectionType connectionType = settings.getConnectionType();
-        if (connectionType != Settings.ConnectionType.BOTH) {
+        if (connectionType != Settings.ConnectionType.ALWAYS) {
             Intent intent = registerReceiver(null, new IntentFilter("android.hardware.usb.action.USB_STATE"));
             boolean connectedToUSB = intent != null && intent.getExtras().getBoolean("connected");
             if ((connectedToUSB && connectionType == Settings.ConnectionType.CHARGER)

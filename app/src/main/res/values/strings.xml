@@ -12,5 +12,5 @@
     <string name="connectionType">Starten bei Verbindung mit</string>
     <string name="connectionTypeCharger">Ladegerät</string>
     <string name="connectionTypePC">PC (USB)</string>
-    <string name="connectionTypeBoth">Beide</string>
+    <string name="connectionTypeAlways">Immer</string>
 </resources>
