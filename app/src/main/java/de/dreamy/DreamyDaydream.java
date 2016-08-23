@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -63,29 +62,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      */
     private ListView listView;
     /**
-     * The animated clock
-     */
-    private TimelyClock timelyClock;
-
-    /**
-     * The field to display the current battery level
-     */
-    private TextView batteryPercentage;
-    /**
-     * The battery icon
-     */
-    private ImageView batteryIcon;
-
-
-    /**
-     * the name of the current carrier
-     */
-    private TextView carrierTextView;
-
-    private LocalBroadcastManager localBroadcastManager;
-
-
-    /**
      * Broadcast receiver to handle incoming notifications
      */
     private final BroadcastReceiver notificationBroadcastReceiver = new BroadcastReceiver() {
@@ -97,7 +73,18 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             displayNotifications();
         }
     };
-
+    /**
+     * The animated clock
+     */
+    private TimelyClock timelyClock;
+    /**
+     * The field to display the current battery level
+     */
+    private TextView batteryPercentage;
+    /**
+     * The battery icon
+     */
+    private ImageView batteryIcon;
     /**
      * Broadcast receiver to handle battery state change events
      */
@@ -129,8 +116,10 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             }
         }
     };
-
-
+    /**
+     * the name of the current carrier
+     */
+    private TextView carrierTextView;
     private final PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
         @Override
@@ -141,7 +130,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             }
         }
     };
-
+    private LocalBroadcastManager localBroadcastManager;
 
     /**
      * {@inheritDoc}
@@ -164,6 +153,12 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         super.onAttachedToWindow();
         final Settings settings = settingsDao.getSettings(this);
 
+        // finishing, if daydream is disabled by settings
+        if (isDaydreamDisabled(settings)) {
+            finish();
+            return;
+        }
+
         // Change Screen brightness
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = settings.getScreenBrightness();
@@ -174,7 +169,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         setContentView(R.layout.daydream_layout);
-        final NotificationListAdapter adapter = new NotificationListAdapter(this, new ArrayList());
+        final NotificationListAdapter adapter = new NotificationListAdapter(this, new ArrayList<StatusBarNotification>());
 
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
@@ -413,5 +408,19 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
     public void updateBatteryLevel() {
         final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         batteryBroadcastReceiver.onReceive(this, batteryIntent);
+    }
+
+    private boolean isDaydreamDisabled(Settings settings) {
+        final Settings.ConnectionType connectionType = settings.getConnectionType();
+        if (connectionType != Settings.ConnectionType.BOTH) {
+            Intent intent = registerReceiver(null, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+            boolean connectedToUSB = intent != null && intent.getExtras().getBoolean("connected");
+            if ((connectedToUSB && connectionType == Settings.ConnectionType.CHARGER)
+                    || (!connectedToUSB && connectionType == Settings.ConnectionType.PC)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

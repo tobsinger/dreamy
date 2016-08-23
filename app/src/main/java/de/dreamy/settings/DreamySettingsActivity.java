@@ -9,9 +9,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -20,6 +23,7 @@ import javax.inject.Inject;
 import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
+import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
 
 /**
  * UI to set the preferences of the daydream's behavior
@@ -172,9 +176,25 @@ public class DreamySettingsActivity extends Activity {
                     return;
                 }
 
-                final Settings settings = settingsDao.getSettings(DreamySettingsActivity.this);
                 settings.setShowCarrierName(b);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+        final Spinner connectionTypeSpinner = (Spinner) findViewById(R.id.connectionTypeSpinner);
+        final ConnectionTypeSpinnerAdapter spinnerAdapter = new ConnectionTypeSpinnerAdapter(this);
+        connectionTypeSpinner.setAdapter(spinnerAdapter);
+        connectionTypeSpinner.setSelection(settings.getConnectionType().ordinal());
+        connectionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settings.setConnectionType(Settings.ConnectionType.values()[i]);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
             }
         });
     }

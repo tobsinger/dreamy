@@ -1,5 +1,7 @@
 package de.dreamy.settings;
 
+import de.dreamy.R;
+
 /**
  * Preferences as given by the user
  */
@@ -41,6 +43,8 @@ public class Settings {
      * The screen brightness
      */
     private float screenBrightness = (float) .8;
+
+    private ConnectionType connectionType = ConnectionType.BOTH;
 
 
     public boolean isWakeOnTimeClick() {
@@ -98,5 +102,25 @@ public class Settings {
 
     public void setScreenBrightness(final float screenBrightness) {
         this.screenBrightness = screenBrightness;
+    }
+
+    public ConnectionType getConnectionType() {
+        return connectionType;
+    }
+
+    public void setConnectionType(ConnectionType connectionType) {
+        this.connectionType = connectionType;
+    }
+
+    public enum ConnectionType {
+        CHARGER(R.string.connectionTypeCharger),
+        PC(R.string.connectionTypePC),
+        BOTH(R.string.connectionTypeBoth);
+
+        public final int stringId;
+
+        ConnectionType(int stringId) {
+            this.stringId = stringId;
+        }
     }
 }
