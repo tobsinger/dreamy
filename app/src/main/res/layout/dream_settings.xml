@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:id="@+id/settingsTable">
 
 
         <!-- display brightness -->
@@ -202,6 +203,8 @@
 
         </TableRow>
 
+        <View style="@style/thinLine" />
+
         <!-- Connection Type -->
         <TableRow
             style="@style/SettingsEntry"
@@ -219,10 +222,22 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
+        </TableRow>
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <Spinner
                 android:id="@+id/connectionTypeSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAlignment="textEnd" />
 
         </TableRow>
 
