@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dreamy">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".DreamyApplication"
@@ -36,7 +39,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".settings.DreamySettingsActivity"></activity>
+        <activity android:name=".settings.DreamySettingsActivity"/>
+
 
     </application>
 

@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
     android:orientation="vertical">
 
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/settingsTable">
 
+
+        <!-- display brightness -->
+        <RelativeLayout
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <SeekBar
+                android:id="@+id/displayDimBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:minWidth="100dp" />
+
+            <TextView
+                android:id="@+id/displayDimLabel"
+                style="@style/SettingsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/displayDimBar"
+                android:text="@string/screen_brightness" />
+
+        </RelativeLayout>
+
+        <View style="@style/thinLine" />
+
+        <!-- Unlock on click on time -->
         <TableRow
+            style="@style/SettingsEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsLabel"
-                android:padding="3dip"
-                android:text="@string/unlock_on_time_click"
-                android:textColor="@android:color/white" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/unlock_on_time_click" />
 
             <Space
                 android:layout_width="0dp"
@@ -28,13 +59,190 @@
 
             <Switch
                 android:id="@+id/endOnTimeClickSwitch"
+                style="@style/SettingsSwitch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="right" />
+                android:layout_height="wrap_content" />
+
         </TableRow>
 
+        <View style="@style/thinLine" />
+
+        <!-- Display notifications -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/displayNotifications" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Switch
+                android:id="@+id/displayNotificationsSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
+
+        <!-- Notification brightness -->
+        <RelativeLayout
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <SeekBar
+                android:id="@+id/notificationsDimBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:minWidth="100dp" />
+
+            <TextView
+                android:id="@+id/notificationDimLabel"
+                style="@style/SettingsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/notificationsDimBar"
+                android:text="@string/notificatoinsVisibility" />
+
+        </RelativeLayout>
+
+        <View style="@style/thinLine" />
+
+        <!-- Battery status -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/displayBatteryStatus" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Switch
+                android:id="@+id/showBatteryStatusSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
+
+        <!-- Wifi name -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dip"
+                android:text="@string/displayWifiStatus" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Switch
+                android:id="@+id/showWifiStatusSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
+
+        <!-- Carrier name -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/displayCarrierName" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Switch
+                android:id="@+id/showCarrierSwitch"
+                style="@style/SettingsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
+
+        <!-- Connection Type -->
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connectionType" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </TableRow>
+        <TableRow
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/connectionTypeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAlignment="textEnd" />
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
 
     </TableLayout>
 
-</LinearLayout>
+</ScrollView>

@@ -2,4 +2,15 @@
     <string name="app_name">Dreamy</string>
     <string name="daydream_name">Dreamy</string>
     <string name="unlock_on_time_click">Bei Tippen auf die Uhrzeit aufwecken</string>
+    <string name="displayNotifications">Benachrichtigungen anzeigen</string>
+    <string name="requestNotificationAccessMsg">Zugriff auf Benachrichtigungen muss gewährt werden</string>
+    <string name="displayBatteryStatus">Zeige Akkustand</string>
+    <string name="displayWifiStatus">Zeige WLAN Status</string>
+    <string name="displayCarrierName">Anbieternamen anzeigen</string>
+    <string name="notificatoinsVisibility">Sichtbarkeit der Benachrichtigungen</string>
+    <string name="screen_brightness">Bildschirmhelligkeit</string>
+    <string name="connectionType">Starten bei Verbindung mit</string>
+    <string name="connectionTypeCharger">Ladegerät</string>
+    <string name="connectionTypePC">PC (USB)</string>
+    <string name="connectionTypeAlways">Immer</string>
 </resources>
