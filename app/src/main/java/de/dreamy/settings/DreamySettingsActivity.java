@@ -3,21 +3,19 @@ package de.dreamy.settings;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TableRow;
 import android.widget.Toast;
 
 import javax.inject.Inject;
@@ -25,6 +23,7 @@ import javax.inject.Inject;
 import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
+import de.dreamy.system.SystemProperties;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
 
 /**
@@ -39,6 +38,8 @@ public class DreamySettingsActivity extends Activity {
      */
     @Inject
     SettingsDao settingsDao;
+    @Inject
+    SystemProperties systemProperties;
 
     /**
      * {@inheritDoc}
@@ -162,14 +163,14 @@ public class DreamySettingsActivity extends Activity {
         // Show carrier info
         final Switch showCarrierSwitch = (Switch) findViewById(R.id.showCarrierSwitch);
         showCarrierSwitch.setChecked(settings.isShowCarrierName()
-                && hasPermission(Manifest.permission.READ_PHONE_STATE));
+                && systemProperties.hasPermission(Manifest.permission.READ_PHONE_STATE));
 
         showCarrierSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 // permission not granted
-                if (!hasPermission(Manifest.permission.READ_PHONE_STATE)
+                if (!systemProperties.hasPermission(Manifest.permission.READ_PHONE_STATE)
                         ) {
                     ActivityCompat.requestPermissions(DreamySettingsActivity.this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
@@ -201,6 +202,44 @@ public class DreamySettingsActivity extends Activity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!systemProperties.isDaydreamEnabled()) {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.daydream_disabled)
+                    .setPositiveButton(R.string.go_to_daydream_settings, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+            dialogBuilder.create().show();
+        } else if (!systemProperties.isDreamySelected()) {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.daydream_not_selected)
+                    .setPositiveButton(R.string.go_to_daydream_settings, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+            dialogBuilder.create().show();
+        }
+    }
+
     /**
      * Check if the notification listener service is running.
      * This indicates if the user has given the app the right to access the notifications
@@ -217,9 +256,5 @@ public class DreamySettingsActivity extends Activity {
         return false;
     }
 
-    private boolean hasPermission(String permission) {
-        return ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
-                permission)
-                == PackageManager.PERMISSION_GRANTED;
-    }
+
 }
