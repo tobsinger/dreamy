@@ -10,11 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
@@ -44,6 +39,7 @@ import javax.inject.Inject;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.settings.Settings;
 import de.dreamy.settings.SettingsDao;
+import de.dreamy.system.SystemProperties;
 import de.dreamy.view.TimelyClock;
 import de.dreamy.view.adapters.NotificationListAdapter;
 
@@ -57,6 +53,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
     @Inject
     SettingsDao settingsDao;
+    @Inject
+    SystemProperties systemProperties;
+
     /**
      * The list that holds the notification views
      */
@@ -187,7 +186,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         if (settings.isShowWifiStatus()) {
             final View wifiInfo = findViewById(R.id.wifiInfo);
-            final String currentWifi = getCurrentWifi();
+            final String currentWifi = systemProperties.getCurrentWifi();
             if (currentWifi != null) {
                 wifiInfo.setVisibility(View.VISIBLE);
                 final TextView wifiName = (TextView) findViewById(R.id.wifiName);
@@ -200,13 +199,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         if (settings.isShowCarrierName()) {
             carrierTextView.setVisibility(View.VISIBLE);
-            carrierTextView.setText(getCarrierName());
+            carrierTextView.setText(systemProperties.getCarrierName());
         } else {
             carrierTextView.setVisibility(View.GONE);
-        }
-
-        if (settings.isShowBatteryStatus()) {
-            updateBatteryLevel();
         }
 
         final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -350,61 +345,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final ApplicationInfo applicationInfo = ((ApplicationInfo) extras.get(Constants.NOTIFICATION_APP));
         final String identifierString = "" + dateString + (applicationInfo != null ? applicationInfo.className : "") + extras.get(Constants.NOTIFICATION_TITLE) + extras.get(Constants.NOTIFICATION_CONTENT);
         return identifierString.hashCode();
-    }
-
-    /**
-     * Get the name of the currently connected wifi
-     *
-     * @return the name of the currently connected wifi. NULL if no wifi connected
-     */
-    private String getCurrentWifi() {
-        final ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        final Network networks[] = connManager.getAllNetworks();
-        for (final Network singleNetwork : networks) {
-            final NetworkInfo networkInfo = connManager.getNetworkInfo(singleNetwork);
-            if (ConnectivityManager.TYPE_WIFI == networkInfo.getType()) {
-                if (!networkInfo.isConnected()) {
-                    continue;
-                }
-                if (networkInfo.isConnected()) {
-                    final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-                    final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
-
-                    if (connectionInfo != null) {
-                        String ssid = connectionInfo.getSSID();
-                        String quotes = String.valueOf('"');
-                        if (ssid.startsWith(quotes)) {
-                            ssid = ssid.substring(1, ssid.length());
-                        }
-                        if (ssid.endsWith(quotes)) {
-                            ssid = ssid.substring(0, ssid.length() - 1);
-                        }
-                        return ssid;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * Get the name of the current carrier
-     *
-     * @return A string with the carrier's name
-     */
-    private String getCarrierName() {
-        final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        return manager.getNetworkOperatorName();
-    }
-
-
-    /**
-     * Get the current battery level and send it to the receiver
-     */
-    public void updateBatteryLevel() {
-        final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        batteryBroadcastReceiver.onReceive(this, batteryIntent);
     }
 
     private boolean isDaydreamDisabled(Settings settings) {
