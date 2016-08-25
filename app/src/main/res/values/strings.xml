@@ -13,4 +13,5 @@
     <string name="connectionTypeCharger">Ladegerät</string>
     <string name="connectionTypePC">PC (USB)</string>
     <string name="connectionTypeAlways">Immer</string>
+    <string name="percent">%d%%</string>
 </resources>

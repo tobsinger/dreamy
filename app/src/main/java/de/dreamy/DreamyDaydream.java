@@ -112,7 +112,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
                 }
             }
             if (batteryPercentage != null) {
-                batteryPercentage.setText(batteryPct + "%");
+                batteryPercentage.setText(String.format(getString(R.string.percent), batteryPct));
             }
         }
     };
@@ -395,15 +395,12 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
      */
     private String getCarrierName() {
         final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        final String carrierName = manager.getNetworkOperatorName();
-        return carrierName;
+        return manager.getNetworkOperatorName();
     }
 
 
     /**
      * Get the current battery level and send it to the receiver
-     *
-     * @return
      */
     public void updateBatteryLevel() {
         final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
