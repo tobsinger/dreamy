@@ -6,11 +6,11 @@
 
 
     <TableLayout
+        android:id="@+id/settingsTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:id="@+id/settingsTable">
+        android:paddingRight="16dp">
 
 
         <!-- display brightness -->
@@ -223,10 +223,12 @@
                 android:layout_weight="1" />
 
         </TableRow>
+
         <TableRow
             style="@style/SettingsEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -238,6 +240,28 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:textAlignment="textEnd" />
+
+        </TableRow>
+
+        <View style="@style/thinLine" />
+
+        <!-- App selection -->
+        <TableRow
+            android:id="@+id/app_selection_row"
+            style="@style/SettingsEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/SettingsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_selection" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
         </TableRow>
 

@@ -16,6 +16,8 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,6 +31,7 @@ public class SystemProperties {
 
     private static final String SCREENSAVER_ENABLED = "screensaver_enabled";
     private static final String SCREENSAVER_COMPONENTS = "screensaver_components";
+    private static float dpScale = 0f;
     private final Context context;
 
     @Inject
@@ -117,9 +120,22 @@ public class SystemProperties {
         for (ApplicationInfo applicationInfo : pm.getInstalledApplications(0)) {
             final String appName = applicationInfo.loadLabel(pm).toString();
             final Drawable icon = applicationInfo.loadIcon(pm);
-            result.add(new AppData(appName, icon));
+            result.add(new AppData(appName, applicationInfo.packageName, icon));
         }
+        Collections.sort(result, new Comparator<AppData>() {
+            @Override
+            public int compare(AppData l, AppData r) {
+                return l.appName.compareToIgnoreCase(r.appName);
+            }
+        });
         return result;
+    }
+
+    public float getDPScale() {
+        if (dpScale == 0f) {
+            dpScale = context.getResources().getDisplayMetrics().density;
+        }
+        return dpScale;
     }
 
     // Copied from Android source code. Gets the ComponentNames for a given name
@@ -134,10 +150,12 @@ public class SystemProperties {
 
     public static class AppData {
         public final String appName;
+        public final String packageName;
         public final Drawable icon;
 
-        private AppData(String appName, Drawable icon) {
+        private AppData(String appName, String packageName, Drawable icon) {
             this.appName = appName;
+            this.packageName = packageName;
             this.icon = icon;
         }
     }

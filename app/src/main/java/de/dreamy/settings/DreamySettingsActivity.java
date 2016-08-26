@@ -12,10 +12,13 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import javax.inject.Inject;
@@ -24,6 +27,7 @@ import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.system.SystemProperties;
+import de.dreamy.view.adapters.AppListAdapter;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
 
 /**
@@ -198,6 +202,42 @@ public class DreamySettingsActivity extends Activity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 // do nothing
+            }
+        });
+
+        final TableRow appSelectionRow = (TableRow) findViewById(R.id.app_selection_row);
+        appSelectionRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ListView appList = new ListView(DreamySettingsActivity.this);
+                final AppListAdapter adapter = new AppListAdapter(systemProperties.getInstalledApps(), settings.getSelectedApps(), DreamySettingsActivity.this);
+                appList.setAdapter(adapter);
+                appList.setDividerHeight(3); //todo dp value
+                appList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        ((CheckBox) view.findViewById(R.id.app_list_checkbox)).toggle();
+                    }
+                });
+                final AlertDialog appListDialog = new AlertDialog.Builder(DreamySettingsActivity.this)
+                        .setView(appList)
+                        .setPositiveButton("Übernehmen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                settings.setSelectedApps(adapter.getSelectedApps());
+                                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+                            }
+                        })
+                        .setNeutralButton("alle abwählen", null)
+                        .setNegativeButton("abbrechen", null)
+                        .create();
+                appListDialog.show();
+                appListDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.deselectAll();
+                    }
+                });
             }
         });
     }
