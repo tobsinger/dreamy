@@ -25,6 +25,7 @@ import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.system.SystemProperties;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
+import de.dreamy.view.adapters.NotificationDetailsSpinnerAdapter;
 
 /**
  * UI to set the preferences of the daydream's behavior
@@ -53,6 +54,7 @@ public class DreamySettingsActivity extends Activity {
 
         final Settings settings = settingsDao.getSettings(this);
         final SeekBar notificationsDimBar = (SeekBar) findViewById(R.id.notificationsDimBar);
+        final Spinner notificationDetailsSpinner = (Spinner) findViewById(R.id.notificationPrivacySpinner);
 
         // End day dream on click on clock
         final Switch endOnTimeClickSwitch = (Switch) findViewById(R.id.endOnTimeClickSwitch);
@@ -81,6 +83,8 @@ public class DreamySettingsActivity extends Activity {
 
                 settings.setShowNotifications(showNotifications);
                 notificationsDimBar.setEnabled(showNotifications);
+                notificationDetailsSpinner.setEnabled(showNotifications);
+                notificationDetailsSpinner.getSelectedView().setEnabled(showNotifications);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
@@ -200,6 +204,25 @@ public class DreamySettingsActivity extends Activity {
                 // do nothing
             }
         });
+
+
+        // Notification details
+        final NotificationDetailsSpinnerAdapter notificationDetailsSpinnerAdapter = new NotificationDetailsSpinnerAdapter(this);
+        notificationDetailsSpinner.setAdapter(notificationDetailsSpinnerAdapter);
+        notificationDetailsSpinner.setSelection(settings.getNotificationPrivacy().ordinal());
+        notificationDetailsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settings.setNotificationPrivacy(Settings.NotificationPrivacy.values()[i]);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
     }
 
     @Override

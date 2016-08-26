@@ -46,6 +46,8 @@ public class Settings {
 
     private ConnectionType connectionType = ConnectionType.ALWAYS;
 
+    private NotificationPrivacy notificationPrivacy = NotificationPrivacy.SHOW_EVERYTHING;
+
 
     public boolean isWakeOnTimeClick() {
         return wakeOnTimeClick;
@@ -112,6 +114,14 @@ public class Settings {
         this.connectionType = connectionType;
     }
 
+    public NotificationPrivacy getNotificationPrivacy() {
+        return notificationPrivacy;
+    }
+
+    public void setNotificationPrivacy(final NotificationPrivacy notificationPrivacy) {
+        this.notificationPrivacy = notificationPrivacy;
+    }
+
     public enum ConnectionType {
         CHARGER(R.string.connectionTypeCharger),
         PC(R.string.connectionTypePC),
@@ -122,5 +132,19 @@ public class Settings {
         ConnectionType(int stringId) {
             this.stringId = stringId;
         }
+    }
+
+    public enum NotificationPrivacy{
+        SHOW_EVERYTHING(R.string.showEverything),
+        SHOW_TITLE(R.string.showTitle),
+        SHOW_APP_NAME(R.string.showNameOfTheApp);
+
+        public final int stringId;
+
+        NotificationPrivacy(int stringId) {
+            this.stringId = stringId;
+        }
+
+
     }
 }
