@@ -46,4 +46,8 @@
         <item name="android:minHeight">72dp</item>
     </style>
 
+    <style name="spinner">
+        <item name="android:backgroundTint">@drawable/spinner_background</item>
+    </style>
+
 </resources>

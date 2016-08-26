@@ -19,4 +19,8 @@
     <string name="daydream_not_selected">Dreamy ist nicht als Daydream-App ausgewählt. Das kannst du in den Einstellungen ändern.</string>
     <string name="go_to_daydream_settings">Daydream-Einstellungen öffnen</string>
     <string name="i_dont_care">Mir doch egal</string>
+    <string name="notificationContent">Inhalt der Benach&#173;richtigung&#173;en</string>
+    <string name="showEverything">Zeige alles</string>
+    <string name="showNameOfTheApp">Zeige Name der App</string>
+    <string name="showTitle">Zeige Titel</string>
 </resources>
