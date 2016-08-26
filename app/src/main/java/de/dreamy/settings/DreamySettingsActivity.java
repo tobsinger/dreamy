@@ -7,8 +7,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -18,8 +22,11 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
+import de.dreamy.Constants;
 import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
@@ -262,6 +269,36 @@ public class DreamySettingsActivity extends Activity {
             dialogBuilder.create().show();
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.the_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_start_daydream:
+                final Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
+                intent.putExtra(Constants.TEST_MODE, true);
+                startActivity(intent);
+
+                final SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+                final SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+                preferencesEditor.putLong(Constants.TEST_MODE, new Date().getTime());
+                preferencesEditor.apply();
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
 
     /**
      * Check if the notification listener service is running.

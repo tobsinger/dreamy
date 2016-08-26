@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -216,7 +217,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -351,7 +351,16 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         final Settings.ConnectionType connectionType = settings.getConnectionType();
         if (connectionType != Settings.ConnectionType.ALWAYS) {
             Intent intent = registerReceiver(null, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+            final SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+            long testModeActivatedAt = sharedPreferences.getLong(Constants.TEST_MODE, 0);
+
+            boolean isInTestMode = (testModeActivatedAt + 5000) >= new Date().getTime();
+            if (isInTestMode) {
+                return false;
+            }
+
             boolean connectedToUSB = intent != null && intent.getExtras().getBoolean("connected");
+
             if ((connectedToUSB && connectionType == Settings.ConnectionType.CHARGER)
                     || (!connectedToUSB && connectionType == Settings.ConnectionType.PC)) {
                 return true;

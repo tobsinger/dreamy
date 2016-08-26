@@ -8,7 +8,7 @@
     <string name="displayBatteryStatus">Zeige Akkustand</string>
     <string name="displayWifiStatus">Zeige WLAN Status</string>
     <string name="displayCarrierName">Anbieternamen anzeigen</string>
-    <string name="notificatoinsVisibility">Sichtbarkeit der Benachrichtigungen</string>
+    <string name="notificatoinsVisibility">Helligkeit der Benachrichtigungen</string>
     <string name="screen_brightness">Bildschirmhelligkeit</string>
     <string name="connectionType">Starten bei Verbindung mit</string>
     <string name="connectionTypeCharger">Ladegerät</string>
@@ -23,4 +23,5 @@
     <string name="showEverything">Zeige alles</string>
     <string name="showNameOfTheApp">Zeige Name der App</string>
     <string name="showTitle">Zeige Titel</string>
+    <string name="start_daydream">Daydream starten</string>
 </resources>
