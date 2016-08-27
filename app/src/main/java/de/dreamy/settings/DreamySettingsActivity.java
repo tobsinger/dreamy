@@ -76,7 +76,14 @@ public class DreamySettingsActivity extends Activity {
 
         // Show notifications
         final Switch showNotificationsSwitch = (Switch) findViewById(R.id.displayNotificationsSwitch);
-        showNotificationsSwitch.setChecked(settings.isShowNotifications() && isNLServiceRunning());
+        boolean notificationsEnabled = settings.isShowNotifications() && isNLServiceRunning();
+        showNotificationsSwitch.setChecked(notificationsEnabled);
+        notificationsDimBar.setEnabled(notificationsEnabled);
+        notificationDetailsSpinner.setEnabled(notificationsEnabled);
+        final View selectedView = notificationDetailsSpinner.getSelectedView();
+        if (selectedView != null) {
+            selectedView.setEnabled(notificationsEnabled);
+        }
         showNotificationsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean showNotifications) {
@@ -95,6 +102,7 @@ public class DreamySettingsActivity extends Activity {
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
+
 
         // Notification visibility
         notificationsDimBar.setProgress((int) (settings.getNotificationVisibility() * 100));
