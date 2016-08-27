@@ -20,8 +20,8 @@
     <string name="go_to_daydream_settings">Daydream-Einstellungen öffnen</string>
     <string name="i_dont_care">Mir doch egal</string>
     <string name="notificationContent">Inhalt der Benach&#173;richtigung&#173;en</string>
-    <string name="showEverything">Zeige alles</string>
-    <string name="showNameOfTheApp">Zeige Name der App</string>
-    <string name="showTitle">Zeige Titel</string>
+    <string name="showEverything">Alles</string>
+    <string name="showNameOfTheApp">Name der App</string>
+    <string name="showTitle">Titel</string>
     <string name="start_daydream">Daydream starten</string>
 </resources>
