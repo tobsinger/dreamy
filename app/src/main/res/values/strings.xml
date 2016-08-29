@@ -18,7 +18,7 @@
     <string name="daydream_disabled">Daydream ist nicht aktiv. Um Dreamy zu verwenden, muss Daydream aktiviert und Dreamy ausgewählt werden.</string>
     <string name="daydream_not_selected">Dreamy ist nicht als Daydream-App ausgewählt. Das kannst du in den Einstellungen ändern.</string>
     <string name="go_to_daydream_settings">Daydream-Einstellungen öffnen</string>
-    <string name="i_dont_care">Mir doch egal</string>
+    <string name="dismiss">Mir doch egal</string>
     <string name="notificationContent">Inhalt der Benach&#173;richtigung&#173;en</string>
     <string name="showEverything">Alles</string>
     <string name="showNameOfTheApp">Name der App</string>
@@ -26,5 +26,9 @@
     <string name="start_daydream">Daydream starten</string>
     <string name="general">Allgemeines</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="devide_status">Gerätestatus</string>
+    <string name="device_status">Gerätestatus</string>
+    <string name="color_of_time">Farbe der Uhrzeit</string>
+    <string name="color_device_status">Farbe der Geräteinformationen</string>
+    <string name="background_color">Hintergrundfarbe</string>
+    <string name="font_color">Schriftfarbe</string>
 </resources>

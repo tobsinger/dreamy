@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
@@ -177,20 +178,25 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         listView.setAlpha(settings.getNotificationVisibility());
         timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
         timelyClock.setOnClickListener(this);
+
+        int deviceStatusColor = settings.getDeviceStatusColor();
+
+
         batteryPercentage = (TextView) findViewById(R.id.batteryPercentage);
         batteryIcon = (ImageView) findViewById(R.id.batteryIcon);
         carrierTextView = (TextView) findViewById(R.id.carrierName);
 
+
         if (settings.isShowBatteryStatus()) {
             findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);
         }
-
+        final TextView wifiName = (TextView) findViewById(R.id.wifiName);
         if (settings.isShowWifiStatus()) {
             final View wifiInfo = findViewById(R.id.wifiInfo);
             final String currentWifi = systemProperties.getCurrentWifi();
             if (currentWifi != null) {
                 wifiInfo.setVisibility(View.VISIBLE);
-                final TextView wifiName = (TextView) findViewById(R.id.wifiName);
+
                 wifiName.setText(currentWifi);
 
             } else {
@@ -203,6 +209,16 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             carrierTextView.setText(systemProperties.getCarrierName());
         } else {
             carrierTextView.setVisibility(View.GONE);
+        }
+
+        if (deviceStatusColor != 0) {
+            batteryPercentage.setTextColor(deviceStatusColor);
+            carrierTextView.setTextColor(deviceStatusColor);
+            batteryPercentage.setTextColor(deviceStatusColor);
+            wifiName.setTextColor(deviceStatusColor);
+
+            ((ImageView) findViewById(R.id.batteryIcon)).setColorFilter(deviceStatusColor, PorterDuff.Mode.MULTIPLY);
+            ((ImageView) findViewById(R.id.wifiIcon)).setColorFilter(deviceStatusColor, PorterDuff.Mode.MULTIPLY);
         }
 
         final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);

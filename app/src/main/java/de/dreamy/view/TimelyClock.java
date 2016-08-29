@@ -3,6 +3,7 @@ package de.dreamy.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +14,20 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
+import de.dreamy.DreamyApplication;
 import de.dreamy.R;
+import de.dreamy.settings.SettingsDao;
 
 /**
  * Created by Tobs on 25/10/15.
  */
 public class TimelyClock extends LinearLayout {
+
+
+    @Inject
+    SettingsDao settingsDao;
 
     public static final int DURATION = 300;
     private static final String TAG = TimelyClock.class.getSimpleName();
@@ -30,6 +39,9 @@ public class TimelyClock extends LinearLayout {
     private TimelyView minutes2;
     private TimelyView seconds1;
     private TimelyView seconds2;
+
+    private int textSize = 0;
+    private float thickness = 0;
 
     public static final int NO_VALUE = -1;
     private int mSecondFirstDigit = NO_VALUE;
@@ -45,6 +57,8 @@ public class TimelyClock extends LinearLayout {
 
     public TimelyClock(Context context) {
         super(context);
+        DreamyApplication.getDreamyComponent().inject(this);
+
         try {
             init(context, null);
         } catch (NoSuchFieldException e) {
@@ -56,6 +70,8 @@ public class TimelyClock extends LinearLayout {
 
     public TimelyClock(Context context, AttributeSet attrs) {
         super(context, attrs);
+        DreamyApplication.getDreamyComponent().inject(this);
+
         try {
             init(context, attrs);
         } catch (NoSuchFieldException e) {
@@ -64,6 +80,7 @@ public class TimelyClock extends LinearLayout {
             Log.w(TAG, e);
         }
     }
+
 
     @Override
     protected void onAttachedToWindow() {
@@ -92,9 +109,10 @@ public class TimelyClock extends LinearLayout {
             inflater.inflate(R.layout.timely_clock, this);
         }
 
-        int textSize = 0;
+
         float colonTextSize = 0;
-        float thickness = 0;
+
+
         int color = getResources().getColor(android.R.color.holo_blue_dark);
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -108,6 +126,13 @@ public class TimelyClock extends LinearLayout {
                 thickness = a.getDimension(R.styleable.TimelyClock_strokeThickness, thickness);
             } finally {
                 a.recycle();
+            }
+        }
+
+        if (settingsDao != null) {
+            color = settingsDao.getSettings(getContext()).getTimeColor();
+            if(color == 0){
+                color = ContextCompat.getColor(context, R.color.white);
             }
         }
 

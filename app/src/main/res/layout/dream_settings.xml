@@ -10,20 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            style="@style/settingsGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="4dp"
-            android:orientation="vertical">
+        <!--general settings-->
+        <LinearLayout style="@style/settingsGroup">
 
             <TextView
                 style="@style/SettingsSectionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/general"/>
-
 
             <!-- display brightness -->
             <RelativeLayout
@@ -49,6 +43,32 @@
                     android:text="@string/screen_brightness"/>
 
             </RelativeLayout>
+
+            <View style="@style/thinLine"/>
+
+            <!-- font color the clock -->
+
+            <RelativeLayout
+                style="@style/SettingsEntry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clipToPadding="false"
+                android:paddingRight="4dp">
+
+                <de.dreamy.view.ColorPicker
+                    android:id="@+id/colorPickerClock"
+                    style="@style/colorButton"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/color_of_time"/>
+
+
+            </RelativeLayout>
+
 
             <View style="@style/thinLine"/>
 
@@ -114,12 +134,7 @@
 
 
         <LinearLayout
-            style="@style/settingsGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="4dp"
-            android:orientation="vertical">
+            style="@style/settingsGroup">
 
             <TextView
                 style="@style/SettingsSectionLabel"
@@ -128,32 +143,26 @@
                 android:text="@string/notifications"/>
 
             <!-- Display notifications -->
-            <TableRow
+
+            <RelativeLayout
                 style="@style/SettingsEntry"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-                <RelativeLayout
+
+                <Switch
+                    android:id="@+id/displayNotificationsSwitch"
+                    style="@style/SettingsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-
-                    <Switch
-                        android:id="@+id/displayNotificationsSwitch"
-                        style="@style/SettingsSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        style="@style/SettingsLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/displayNotifications"/>
-                </RelativeLayout>
-
-
-            </TableRow>
+                    android:text="@string/displayNotifications"/>
+            </RelativeLayout>
 
             <View style="@style/thinLine"/>
 
@@ -182,6 +191,60 @@
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/notificationPrivacySpinner"
                     android:text="@string/notificationContent"/>
+
+
+            </RelativeLayout>
+
+
+
+            <View style="@style/thinLine"/>
+
+
+            <!-- background color the notifications -->
+
+            <RelativeLayout
+                style="@style/SettingsEntry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clipToPadding="false"
+                android:paddingRight="4dp">
+
+                <de.dreamy.view.ColorPicker
+                    android:id="@+id/colorPickerNotificationsBackground"
+                    style="@style/colorButton"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/background_color"/>
+
+
+            </RelativeLayout>
+
+            <View style="@style/thinLine"/>
+
+
+            <!-- font color the notifications -->
+
+            <RelativeLayout
+                style="@style/SettingsEntry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clipToPadding="false"
+                android:paddingRight="4dp">
+
+                <de.dreamy.view.ColorPicker
+                    android:id="@+id/colorPickerNotificationsFont"
+                    style="@style/colorButton"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/font_color"/>
 
 
             </RelativeLayout>
@@ -227,101 +290,101 @@
                 style="@style/SettingsSectionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/devide_status"/>
+                android:text="@string/device_status"/>
 
-            <!-- Battery status -->
-            <TableRow
+            <!-- font color the device status information -->
+
+            <RelativeLayout
                 style="@style/SettingsEntry"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:clipToPadding="false"
+                android:paddingRight="4dp">
 
-                <RelativeLayout
+                <de.dreamy.view.ColorPicker
+                    android:id="@+id/colorPickerDeviceStatusInformation"
+                    style="@style/colorButton"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <Switch
-                        android:id="@+id/showBatteryStatusSwitch"
-                        style="@style/SettingsSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        style="@style/SettingsLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/displayBatteryStatus"/>
+                    android:text="@string/color_device_status"/>
 
 
-                </RelativeLayout>
+            </RelativeLayout>
 
+            <View style="@style/thinLine"/>
 
-            </TableRow>
+            <!-- Battery status -->
+
+            <RelativeLayout
+                style="@style/SettingsEntry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <Switch
+                    android:id="@+id/showBatteryStatusSwitch"
+                    style="@style/SettingsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/displayBatteryStatus"/>
+
+            </RelativeLayout>
 
             <View style="@style/thinLine"/>
 
             <!-- Wifi name -->
-            <TableRow
+            <RelativeLayout
                 style="@style/SettingsEntry"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-                <RelativeLayout
+                <Switch
+                    android:id="@+id/showWifiStatusSwitch"
+                    style="@style/SettingsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
+                    android:padding="3dip"
+                    android:text="@string/displayWifiStatus"/>
 
-                    <Switch
-                        android:id="@+id/showWifiStatusSwitch"
-                        style="@style/SettingsSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        style="@style/SettingsLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="3dip"
-                        android:text="@string/displayWifiStatus"/>
-
-
-                </RelativeLayout>
-
-            </TableRow>
+            </RelativeLayout>
 
             <View style="@style/thinLine"/>
 
             <!-- Carrier name -->
-            <TableRow
+            <RelativeLayout
                 style="@style/SettingsEntry"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
 
-                <RelativeLayout
+                <Switch
+                    android:id="@+id/showCarrierSwitch"
+                    style="@style/SettingsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
+                    android:text="@string/displayCarrierName"/>
 
-                    <Switch
-                        android:id="@+id/showCarrierSwitch"
-                        style="@style/SettingsSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        style="@style/SettingsLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/displayCarrierName"/>
-
-
-                </RelativeLayout>
-
-            </TableRow>
-
+            </RelativeLayout>
         </LinearLayout>
-
-
     </TableLayout>
-
 </ScrollView>

@@ -58,6 +58,11 @@ public class NotificationListAdapter extends ArrayAdapter<StatusBarNotification>
             // store the holder with the view.
             convertView.setTag(viewHolder);
 
+            int backgroundColor = settingsDao.getSettings(getContext()).getNotificationsBackgroundColor();
+            if (backgroundColor != 0) {
+                convertView.setBackgroundColor(backgroundColor);
+            }
+
 
             viewHolder.headline = (TextView) convertView.findViewById(R.id.notificationHeadline);
             viewHolder.timeView = (TextView) convertView.findViewById(R.id.notificationTime);
@@ -66,7 +71,6 @@ public class NotificationListAdapter extends ArrayAdapter<StatusBarNotification>
 
         } else {
             viewHolder = (ViewHolderItem) convertView.getTag();
-
         }
 
         if (notification.when > 0) {
@@ -88,6 +92,8 @@ public class NotificationListAdapter extends ArrayAdapter<StatusBarNotification>
             viewHolder.headline.setText(appName);
         }
 
+        int fontColor = settings.getNotificationsFontColor();
+
 
         if (notificationPrivacy == Settings.NotificationPrivacy.SHOW_EVERYTHING) {
             if (notification.extras.get(Constants.NOTIFICATION_CONTENT) != null) {
@@ -106,7 +112,17 @@ public class NotificationListAdapter extends ArrayAdapter<StatusBarNotification>
         Icon icon = notification.getLargeIcon();
         if (icon == null) {
             icon = notification.getSmallIcon();
-            icon.setTint(context.getColor(R.color.white));
+            if (fontColor != 0) {
+                icon.setTint(fontColor);
+            } else {
+                icon.setTint(context.getColor(R.color.white));
+            }
+        }
+
+        if (fontColor != 0) {
+            viewHolder.headline.setTextColor(fontColor);
+            viewHolder.description.setTextColor(fontColor);
+            viewHolder.timeView.setTextColor(fontColor);
         }
 
         viewHolder.imageView.setImageIcon(icon);

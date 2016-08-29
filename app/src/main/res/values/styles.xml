@@ -63,6 +63,25 @@
 
     </style>
 
+    <style name="colorButton">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_width">36dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:background">@drawable/color_picker_background</item>
+    </style>
+
+    <style name="colorPickerButton">
+
+        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_width">42dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <!--<item name="android:padding">4dp</item>-->
+    </style>
+
     <style name="SettingsEntry">
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>

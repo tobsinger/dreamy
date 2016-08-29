@@ -1,0 +1,142 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:useDefaultMargins="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <ImageButton
+            android:id="@+id/white"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_white"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+
+        <ImageButton
+            android:id="@+id/gray"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_gray"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/red"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_red"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/maroon"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_maroon"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+
+        <ImageButton
+            android:id="@+id/purple"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_purple"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+
+        <ImageButton
+            android:id="@+id/yellow"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_yellow"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/green"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_green"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/black"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_black"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <ImageButton
+            android:id="@+id/teal"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_teal"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/aqua"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_aqua"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/navy"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_navy"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/blue"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_blue"/>
+    </LinearLayout>
+
+
+</LinearLayout>

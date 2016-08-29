@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.system.SystemProperties;
+import de.dreamy.view.ColorPicker;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
 import de.dreamy.view.adapters.NotificationDetailsSpinnerAdapter;
 
@@ -73,6 +75,60 @@ public class DreamySettingsActivity extends Activity {
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
+
+
+        final ColorPicker colorPickerTime = (ColorPicker) findViewById(R.id.colorPickerClock);
+        colorPickerTime.addColorPickedListener(new ColorPicker.ColorPickedListener() {
+            @Override
+            public void onColorPicked(final int colorId) {
+                settings.setTimeColor(ContextCompat.getColor(DreamySettingsActivity.this, colorId));
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+        if (settings.getTimeColor() != 0) {
+            colorPickerTime.onColorPicked(settings.getTimeColor());
+        }
+
+
+        final ColorPicker colorPickerDeviceStatus = (ColorPicker) findViewById(R.id.colorPickerDeviceStatusInformation);
+        colorPickerDeviceStatus.addColorPickedListener(new ColorPicker.ColorPickedListener() {
+            @Override
+            public void onColorPicked(final int colorId) {
+                settings.setDeviceStatusColor(ContextCompat.getColor(DreamySettingsActivity.this, colorId));
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+        if (settings.getDeviceStatusColor() != 0) {
+            colorPickerDeviceStatus.onColorPicked(settings.getDeviceStatusColor());
+        }
+
+        final ColorPicker colorPickerNotificationFontColor = (ColorPicker) findViewById(R.id.colorPickerNotificationsFont);
+        colorPickerNotificationFontColor.addColorPickedListener(new ColorPicker.ColorPickedListener() {
+            @Override
+            public void onColorPicked(final int colorId) {
+                settings.setNotificationsFontColor(ContextCompat.getColor(DreamySettingsActivity.this, colorId));
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+        if (settings.getNotificationsFontColor() != 0) {
+            colorPickerNotificationFontColor.onColorPicked(settings.getNotificationsFontColor());
+        }
+
+
+        final ColorPicker colorPickerNotificationsBackground = (ColorPicker) findViewById(R.id.colorPickerNotificationsBackground);
+        colorPickerNotificationsBackground.addColorPickedListener(new ColorPicker.ColorPickedListener() {
+            @Override
+            public void onColorPicked(final int colorId) {
+                settings.setNotificationsBackgroundColor(ContextCompat.getColor(DreamySettingsActivity.this, colorId));
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+        });
+
+        if (settings.getNotificationsBackgroundColor() != 0) {
+            colorPickerNotificationsBackground.onColorPicked(settings.getNotificationsBackgroundColor());
+        }
 
         // Show notifications
         final Switch showNotificationsSwitch = (Switch) findViewById(R.id.displayNotificationsSwitch);
@@ -252,7 +308,7 @@ public class DreamySettingsActivity extends Activity {
                             startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
                         }
                     })
-                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
@@ -268,7 +324,7 @@ public class DreamySettingsActivity extends Activity {
                             startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
                         }
                     })
-                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();

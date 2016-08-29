@@ -44,6 +44,27 @@ public class Settings {
      */
     private float screenBrightness = (float) .8;
 
+    /**
+     * The font color of the time
+     */
+    private int timeColor = 0;
+
+    /**
+     * The font color of the device status
+     */
+    private int deviceStatusColor = 0;
+
+    /**
+     * The background color of notifications
+     */
+    private int notificationsBackgroundColor = 0;
+
+    /**
+     * The font color of notifications
+     */
+    private int notificationsFontColor = 0;
+
+
     private ConnectionType connectionType = ConnectionType.ALWAYS;
 
     private NotificationPrivacy notificationPrivacy = NotificationPrivacy.SHOW_EVERYTHING;
@@ -122,6 +143,38 @@ public class Settings {
         this.notificationPrivacy = notificationPrivacy;
     }
 
+    public int getTimeColor() {
+        return timeColor;
+    }
+
+    public void setTimeColor(final int timeColor) {
+        this.timeColor = timeColor;
+    }
+
+    public int getDeviceStatusColor() {
+        return deviceStatusColor;
+    }
+
+    public void setDeviceStatusColor(final int deviceStatusColor) {
+        this.deviceStatusColor = deviceStatusColor;
+    }
+
+    public int getNotificationsBackgroundColor() {
+        return notificationsBackgroundColor;
+    }
+
+    public void setNotificationsBackgroundColor(final int notificationsBackgroundColor) {
+        this.notificationsBackgroundColor = notificationsBackgroundColor;
+    }
+
+    public int getNotificationsFontColor() {
+        return notificationsFontColor;
+    }
+
+    public void setNotificationsFontColor(final int notificationsFontColor) {
+        this.notificationsFontColor = notificationsFontColor;
+    }
+
     public enum ConnectionType {
         CHARGER(R.string.connectionTypeCharger),
         PC(R.string.connectionTypePC),
@@ -134,7 +187,7 @@ public class Settings {
         }
     }
 
-    public enum NotificationPrivacy{
+    public enum NotificationPrivacy {
         SHOW_EVERYTHING(R.string.showEverything),
         SHOW_TITLE(R.string.showTitle),
         SHOW_APP_NAME(R.string.showNameOfTheApp);

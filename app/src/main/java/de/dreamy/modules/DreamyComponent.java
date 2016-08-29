@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import de.dreamy.DreamyDaydream;
 import de.dreamy.settings.DreamySettingsActivity;
+import de.dreamy.view.TimelyClock;
 import de.dreamy.view.adapters.NotificationListAdapter;
 
 /**
@@ -18,4 +19,6 @@ public interface DreamyComponent {
     void inject(DreamyDaydream dreamyDaydream);
 
     void inject(NotificationListAdapter notificationListAdapter);
+
+    void inject(TimelyClock timelyClock);
 }
