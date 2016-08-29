@@ -24,4 +24,7 @@
     <string name="showNameOfTheApp">Name der App</string>
     <string name="showTitle">Titel</string>
     <string name="start_daydream">Daydream starten</string>
+    <string name="general">Allgemeines</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="devide_status">Gerätestatus</string>
 </resources>

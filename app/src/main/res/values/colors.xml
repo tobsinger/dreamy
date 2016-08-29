@@ -16,7 +16,7 @@
     <item name="white" type="color">#FFFFFF</item>
     <item name="black" type="color">#000000</item>
     <item name="gray" type="color">#9f9f9f</item>
-    <item name="lightGray" type="color">#cecece</item>
+    <item name="lightGray" type="color">#f1f1f1</item>
 
 
     <integer-array name="androidcolors">
