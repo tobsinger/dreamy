@@ -88,12 +88,22 @@ public class ColorPicker extends ImageButton implements View.OnClickListener, Co
         } else if (color == R.color.blue || color == getColor(R.color.blue)) {
             colorPickerBackground = R.drawable.color_picker_background_blue;
             colorId = R.color.blue;
-        }
-        else if (color == R.color.black || color == getColor(R.color.black)) {
+        } else if (color == R.color.black || color == getColor(R.color.black)) {
             colorPickerBackground = R.drawable.color_picker_background_black;
             colorId = R.color.black;
-        }
-        else {
+        } else if (color == R.color.darkgray || color == getColor(R.color.darkgray)) {
+            colorPickerBackground = R.drawable.color_picker_background_dark_gray;
+            colorId = R.color.darkgray;
+        } else if (color == R.color.olive || color == getColor(R.color.olive)) {
+            colorPickerBackground = R.drawable.color_picker_background_olive;
+            colorId = R.color.olive;
+        } else if (color == R.color.orange || color == getColor(R.color.orange)) {
+            colorPickerBackground = R.drawable.color_picker_background_olive;
+            colorId = R.color.orange;
+        } else if (color == R.color.fuchsia || color == getColor(R.color.fuchsia)) {
+            colorPickerBackground = R.drawable.color_picker_background_fuchsia;
+            colorId = R.color.fuchsia;
+        } else {
             colorPickerBackground = R.drawable.color_picker_background_white;
             colorId = R.color.white;
         }

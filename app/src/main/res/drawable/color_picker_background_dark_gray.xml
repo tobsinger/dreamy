@@ -5,7 +5,7 @@
         android:color="@color/alt">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/fuchsia"/>
+            <solid android:color="@color/darkgray"/>
         </shape>
     </item>
 </ripple>

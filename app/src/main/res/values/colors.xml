@@ -22,6 +22,7 @@
     <item name="silver" type="color">#C0C0C0</item>
     <item name="navy" type="color">#000080	</item>
     <item name="gray" type="color">#9f9f9f</item>
+    <item name="darkgray" type="color">#5e5e5e</item>
     <item name="teal" type="color">#008080</item>
     <item name="fuchsia" type="color">#FF00FF</item>
     <item name="aqua" type="color">#00FFFF</item>

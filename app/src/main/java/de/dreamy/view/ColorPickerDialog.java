@@ -54,6 +54,10 @@ public class ColorPickerDialog extends DialogFragment implements View.OnClickLis
         dialog.findViewById(R.id.aqua).setOnClickListener(this);
         dialog.findViewById(R.id.navy).setOnClickListener(this);
         dialog.findViewById(R.id.blue).setOnClickListener(this);
+        dialog.findViewById(R.id.dark_gray).setOnClickListener(this);
+        dialog.findViewById(R.id.olive).setOnClickListener(this);
+        dialog.findViewById(R.id.orange).setOnClickListener(this);
+        dialog.findViewById(R.id.fuchsia).setOnClickListener(this);
         super.onStart();
     }
 
@@ -93,6 +97,18 @@ public class ColorPickerDialog extends DialogFragment implements View.OnClickLis
                 break;
             case R.id.blue:
                 colorId = R.color.blue;
+                break;
+            case R.id.dark_gray:
+                colorId = R.color.darkgray;
+                break;
+            case R.id.olive:
+                colorId = R.color.olive;
+                break;
+            case R.id.orange:
+                colorId = R.color.orange;
+                break;
+            case R.id.fuchsia:
+                colorId = R.color.fuchsia;
                 break;
             default:
                 colorId = R.color.white;

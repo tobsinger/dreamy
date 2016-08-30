@@ -144,5 +144,47 @@
             android:background="@drawable/color_picker_background_blue"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <ImageButton
+            android:id="@+id/dark_gray"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_dark_gray"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/olive"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_olive"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/orange"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_orange"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/fuchsia"
+            style="@style/colorPickerButton"
+            android:background="@drawable/color_picker_background_fuchsia"/>
+    </LinearLayout>
+
 
 </LinearLayout>
