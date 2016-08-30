@@ -6,6 +6,13 @@
     <item
         android:id="@+id/action_start_daydream"
         android:orderInCategory="100"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/start_daydream"/>
+
+
+    <item
+        android:id="@+id/action_daydream_settings"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:title="@string/general_daydream_settings"/>
 </menu>

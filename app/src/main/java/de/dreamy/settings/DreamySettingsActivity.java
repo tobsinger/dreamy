@@ -356,6 +356,8 @@ public class DreamySettingsActivity extends Activity {
                 preferencesEditor.putLong(Constants.TEST_MODE, new Date().getTime());
                 preferencesEditor.apply();
                 break;
+            case R.id.action_daydream_settings:
+                startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
             default:
                 break;
         }
