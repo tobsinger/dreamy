@@ -58,7 +58,8 @@
 
                 <de.dreamy.view.ColorPicker
                     android:id="@+id/colorPickerClock"
-                    style="@style/colorButton"/>
+                    style="@style/colorButton"
+                    android:background="@drawable/color_picker_background_white"/>
 
                 <TextView
                     style="@style/SettingsLabel"
@@ -196,7 +197,6 @@
             </RelativeLayout>
 
 
-
             <View style="@style/thinLine"/>
 
 
@@ -212,7 +212,8 @@
 
                 <de.dreamy.view.ColorPicker
                     android:id="@+id/colorPickerNotificationsBackground"
-                    style="@style/colorButton"/>
+                    style="@style/colorButton"
+                    android:background="@drawable/color_picker_background_gray"/>
 
                 <TextView
                     style="@style/SettingsLabel"
@@ -238,7 +239,8 @@
 
                 <de.dreamy.view.ColorPicker
                     android:id="@+id/colorPickerNotificationsFont"
-                    style="@style/colorButton"/>
+                    style="@style/colorButton"
+                    android:background="@drawable/color_picker_background_white"/>
 
                 <TextView
                     style="@style/SettingsLabel"
@@ -293,7 +295,6 @@
                 android:text="@string/device_status"/>
 
             <!-- font color the device status information -->
-
             <RelativeLayout
                 style="@style/SettingsEntry"
                 android:layout_width="match_parent"
@@ -304,7 +305,8 @@
 
                 <de.dreamy.view.ColorPicker
                     android:id="@+id/colorPickerDeviceStatusInformation"
-                    style="@style/colorButton"/>
+                    style="@style/colorButton"
+                    android:background="@drawable/color_picker_background_white"/>
 
                 <TextView
                     style="@style/SettingsLabel"

@@ -31,4 +31,5 @@
     <string name="color_device_status">Farbe der Geräteinformationen</string>
     <string name="background_color">Hintergrundfarbe</string>
     <string name="font_color">Schriftfarbe</string>
+    <string name="choose_color">Farbe auswählen</string>
 </resources>

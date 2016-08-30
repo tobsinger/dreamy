@@ -5,6 +5,12 @@
     android:orientation="vertical"
     android:useDefaultMargins="true">
 
+    <TextView
+        style="@style/ChooseColorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_color"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

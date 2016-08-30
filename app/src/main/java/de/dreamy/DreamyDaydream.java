@@ -14,6 +14,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.ContextCompat;
@@ -189,6 +190,13 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         if (settings.isShowBatteryStatus()) {
             findViewById(R.id.batteryInfo).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.batteryInfo).setVisibility(View.GONE);
+        }
+        if (settings.isShowCarrierName()) {
+            carrierTextView.setVisibility(View.VISIBLE);
+        } else {
+            carrierTextView.setVisibility(View.GONE);
         }
         final TextView wifiName = (TextView) findViewById(R.id.wifiName);
         if (settings.isShowWifiStatus()) {

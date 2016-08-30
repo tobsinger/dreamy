@@ -3,6 +3,7 @@ package de.dreamy.view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,14 @@ public class ColorPickerDialog extends DialogFragment implements View.OnClickLis
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.color_picker_dialog_layout, null));
+
+        builder.setNegativeButton(R.string.dismiss,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dismiss();
+                    }
+                }
+        );
         return builder.create();
     }
 
@@ -99,7 +108,6 @@ public class ColorPickerDialog extends DialogFragment implements View.OnClickLis
     public interface ColorPickedListener {
         void onColorPicked(int colorId);
     }
-
 
 
 }
