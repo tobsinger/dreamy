@@ -284,7 +284,7 @@ public class DreamySettingsActivity extends Activity {
         final Spinner clockStyleSpinner = (Spinner) findViewById(R.id.clockStyleSpinner);
         final ClockStyleSpinnerAdapter clockStyleSpinnerAdapter = new ClockStyleSpinnerAdapter(this);
         clockStyleSpinner.setAdapter(clockStyleSpinnerAdapter);
-        clockStyleSpinner.setSelection(settings.getConnectionType().ordinal());
+        clockStyleSpinner.setSelection(settings.getClockStyle().ordinal());
         clockStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
