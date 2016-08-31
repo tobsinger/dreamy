@@ -12,9 +12,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Debug;
 import android.service.dreams.DreamService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.ContextCompat;
@@ -133,6 +133,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         }
     };
     private LocalBroadcastManager localBroadcastManager;
+    private TextView textClock;
 
     /**
      * {@inheritDoc}
@@ -177,8 +178,21 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         listView.setAlpha(settings.getNotificationVisibility());
+        textClock = (TextView) findViewById(R.id.textClock);
         timelyClock = (TimelyClock) findViewById(R.id.timelyClock);
         timelyClock.setOnClickListener(this);
+
+
+        if (settings.getClockStyle() == Settings.ClockStyle.DIGITAL) {
+            Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/dsdigib.ttf");
+            textClock.setTypeface(typeFace);
+            timelyClock.setVisibility(View.GONE);
+
+
+
+        } else {
+            textClock.setVisibility(View.GONE);
+        }
 
         int deviceStatusColor = settings.getDeviceStatusColor();
 
@@ -204,7 +218,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             final String currentWifi = systemProperties.getCurrentWifi();
             if (currentWifi != null) {
                 wifiInfo.setVisibility(View.VISIBLE);
-
                 wifiName.setText(currentWifi);
 
             } else {

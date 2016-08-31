@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -33,6 +34,7 @@ import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.system.SystemProperties;
 import de.dreamy.view.ColorPicker;
+import de.dreamy.view.adapters.ClockStyleSpinnerAdapter;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
 import de.dreamy.view.adapters.NotificationDetailsSpinnerAdapter;
 
@@ -62,6 +64,7 @@ public class DreamySettingsActivity extends Activity {
         setContentView(R.layout.dream_settings);
 
         final Settings settings = settingsDao.getSettings(this);
+
         final SeekBar notificationsDimBar = (SeekBar) findViewById(R.id.notificationsDimBar);
         final Spinner notificationDetailsSpinner = (Spinner) findViewById(R.id.notificationPrivacySpinner);
 
@@ -88,6 +91,7 @@ public class DreamySettingsActivity extends Activity {
         if (settings.getTimeColor() != 0) {
             colorPickerTime.onColorPicked(settings.getTimeColor());
         }
+
 
 
         final ColorPicker colorPickerDeviceStatus = (ColorPicker) findViewById(R.id.colorPickerDeviceStatusInformation);
@@ -267,6 +271,24 @@ public class DreamySettingsActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 settings.setConnectionType(Settings.ConnectionType.values()[i]);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+
+        final Spinner clockStyleSpinner = (Spinner) findViewById(R.id.clockStyleSpinner);
+        final ClockStyleSpinnerAdapter clockStyleSpinnerAdapter = new ClockStyleSpinnerAdapter(this);
+        clockStyleSpinner.setAdapter(clockStyleSpinnerAdapter);
+        clockStyleSpinner.setSelection(settings.getConnectionType().ordinal());
+        clockStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settings.setClockStyle(Settings.ClockStyle.values()[i]);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
 

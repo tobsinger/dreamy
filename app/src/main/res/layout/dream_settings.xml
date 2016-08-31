@@ -70,6 +70,35 @@
 
             </RelativeLayout>
 
+            <View style="@style/thinLine"/>
+            <!-- clock style-->
+            <RelativeLayout
+                style="@style/SettingsEntry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <Spinner
+                    android:id="@+id/clockStyleSpinner"
+                    style="@style/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textAlignment="textEnd"/>
+
+                <TextView
+                    style="@style/SettingsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/clockStyleSpinner"
+                    android:text="@string/clock_style"/>
+
+
+            </RelativeLayout>
+
 
             <View style="@style/thinLine"/>
 
@@ -109,7 +138,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
                 <Spinner
                     android:id="@+id/connectionTypeSpinner"
                     style="@style/spinner"
@@ -127,7 +155,6 @@
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/connectionTypeSpinner"
                     android:text="@string/connectionType"/>
-
 
             </RelativeLayout>
 

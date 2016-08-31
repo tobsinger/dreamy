@@ -64,6 +64,11 @@ public class Settings {
      */
     private int notificationsFontColor = 0;
 
+    /**
+     * The style of the clock
+     */
+    private ClockStyle clockStyle = ClockStyle.ANIMATED;
+
 
     private ConnectionType connectionType = ConnectionType.ALWAYS;
 
@@ -175,6 +180,14 @@ public class Settings {
         this.notificationsFontColor = notificationsFontColor;
     }
 
+    public ClockStyle getClockStyle() {
+        return clockStyle;
+    }
+
+    public void setClockStyle(final ClockStyle clockStyle) {
+        this.clockStyle = clockStyle;
+    }
+
     public enum ConnectionType {
         CHARGER(R.string.connectionTypeCharger),
         PC(R.string.connectionTypePC),
@@ -195,6 +208,20 @@ public class Settings {
         public final int stringId;
 
         NotificationPrivacy(int stringId) {
+            this.stringId = stringId;
+        }
+
+
+    }
+
+
+    public enum ClockStyle {
+        ANIMATED(R.string.animated),
+        DIGITAL(R.string.digital);
+
+        public final int stringId;
+
+        ClockStyle(int stringId) {
             this.stringId = stringId;
         }
 

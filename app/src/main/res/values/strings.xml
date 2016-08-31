@@ -33,4 +33,7 @@
     <string name="font_color">Schriftfarbe</string>
     <string name="choose_color">Farbe auswählen</string>
     <string name="general_daydream_settings">Allgemeine Daydream Einstellungen</string>
+    <string name="animated">Animiert</string>
+    <string name="digital">Digital</string>
+    <string name="clock_style">Stil der Uhrzeit</string>
 </resources>

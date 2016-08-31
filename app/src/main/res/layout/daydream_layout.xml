@@ -25,21 +25,38 @@
             android:textSize="12sp"/>
     </LinearLayout>
 
-    <de.dreamy.view.TimelyClock
-        android:id="@+id/timelyClock"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/clockArea"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/carrierInfo"
-        android:layout_centerHorizontal="true"
-        app:clockTextColor="@color/white"
-        app:strokeThickness="4dp"
-        app:textSize="62sp"/>
+        android:layout_below="@id/carrierInfo">
+
+        <de.dreamy.view.TimelyClock
+            android:id="@+id/timelyClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            app:clockTextColor="@color/white"
+            app:strokeThickness="4dp"
+            app:textSize="62sp"/>
+
+
+        <TextView
+            android:id="@+id/textClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerHorizontal="true"
+            android:text="16:40:55"
+            android:textSize="62sp"
+            />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/statusBarIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/timelyClock"
+        android:layout_below="@id/clockArea"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:padding="10dp">
@@ -58,8 +75,8 @@
                 android:layout_height="16dp"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginEnd="4dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_battery_full_white_48dp"/>
+                android:src="@drawable/ic_battery_full_white_48dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/batteryPercentage"
@@ -100,7 +117,6 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layoutAnimation="@anim/example"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/statusBarIcons"
@@ -108,6 +124,7 @@
         android:layout_marginEnd="10pt"
         android:layout_marginStart="10pt"
         android:divider="#ff000000"
-        android:dividerHeight="2pt"/>
+        android:dividerHeight="2pt"
+        android:layoutAnimation="@anim/example"/>
 
 </RelativeLayout>
