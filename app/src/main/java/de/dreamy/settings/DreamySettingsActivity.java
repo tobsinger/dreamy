@@ -3,29 +3,40 @@ package de.dreamy.settings;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
+import de.dreamy.Constants;
 import de.dreamy.DreamyApplication;
 import de.dreamy.R;
 import de.dreamy.notifications.NotificationListener;
+import de.dreamy.system.SystemProperties;
+import de.dreamy.view.adapters.AppListAdapter;
 import de.dreamy.view.adapters.ConnectionTypeSpinnerAdapter;
+import de.dreamy.view.adapters.NotificationDetailsSpinnerAdapter;
 
 /**
  * UI to set the preferences of the daydream's behavior
@@ -39,6 +50,8 @@ public class DreamySettingsActivity extends Activity {
      */
     @Inject
     SettingsDao settingsDao;
+    @Inject
+    SystemProperties systemProperties;
 
     /**
      * {@inheritDoc}
@@ -52,6 +65,7 @@ public class DreamySettingsActivity extends Activity {
 
         final Settings settings = settingsDao.getSettings(this);
         final SeekBar notificationsDimBar = (SeekBar) findViewById(R.id.notificationsDimBar);
+        final Spinner notificationDetailsSpinner = (Spinner) findViewById(R.id.notificationPrivacySpinner);
 
         // End day dream on click on clock
         final Switch endOnTimeClickSwitch = (Switch) findViewById(R.id.endOnTimeClickSwitch);
@@ -80,6 +94,8 @@ public class DreamySettingsActivity extends Activity {
 
                 settings.setShowNotifications(showNotifications);
                 notificationsDimBar.setEnabled(showNotifications);
+                notificationDetailsSpinner.setEnabled(showNotifications);
+                notificationDetailsSpinner.getSelectedView().setEnabled(showNotifications);
                 settingsDao.persistSettings(settings, DreamySettingsActivity.this);
             }
         });
@@ -162,14 +178,14 @@ public class DreamySettingsActivity extends Activity {
         // Show carrier info
         final Switch showCarrierSwitch = (Switch) findViewById(R.id.showCarrierSwitch);
         showCarrierSwitch.setChecked(settings.isShowCarrierName()
-                && hasPermission(Manifest.permission.READ_PHONE_STATE));
+                && systemProperties.hasPermission(Manifest.permission.READ_PHONE_STATE));
 
         showCarrierSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 // permission not granted
-                if (!hasPermission(Manifest.permission.READ_PHONE_STATE)
+                if (!systemProperties.hasPermission(Manifest.permission.READ_PHONE_STATE)
                         ) {
                     ActivityCompat.requestPermissions(DreamySettingsActivity.this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
@@ -199,7 +215,128 @@ public class DreamySettingsActivity extends Activity {
                 // do nothing
             }
         });
+
+        // Notification details
+        final NotificationDetailsSpinnerAdapter notificationDetailsSpinnerAdapter = new NotificationDetailsSpinnerAdapter(this);
+        notificationDetailsSpinner.setAdapter(notificationDetailsSpinnerAdapter);
+        notificationDetailsSpinner.setSelection(settings.getNotificationPrivacy().ordinal());
+        notificationDetailsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                settings.setNotificationPrivacy(Settings.NotificationPrivacy.values()[i]);
+                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+        final TableRow appSelectionRow = (TableRow) findViewById(R.id.app_selection_row);
+        appSelectionRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ListView appList = new ListView(DreamySettingsActivity.this);
+                final AppListAdapter adapter = new AppListAdapter(systemProperties.getInstalledApps(), settings.getSelectedApps(), DreamySettingsActivity.this);
+                appList.setAdapter(adapter);
+                appList.setDividerHeight(3); //todo dp value
+                appList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        ((CheckBox) view.findViewById(R.id.app_list_checkbox)).toggle();
+                    }
+                });
+                final AlertDialog appListDialog = new AlertDialog.Builder(DreamySettingsActivity.this)
+                        .setView(appList)
+                        .setPositiveButton("Übernehmen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                settings.setSelectedApps(adapter.getSelectedApps());
+                                settingsDao.persistSettings(settings, DreamySettingsActivity.this);
+                            }
+                        })
+                        .setNeutralButton("alle abwählen", null)
+                        .setNegativeButton("abbrechen", null)
+                        .create();
+                appListDialog.show();
+                appListDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.deselectAll();
+                    }
+                });
+            }
+        });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!systemProperties.isDaydreamEnabled()) {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.daydream_disabled)
+                    .setPositiveButton(R.string.go_to_daydream_settings, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+            dialogBuilder.create().show();
+        } else if (!systemProperties.isDreamySelected()) {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.daydream_not_selected)
+                    .setPositiveButton(R.string.go_to_daydream_settings, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_DREAM_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.i_dont_care, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+            dialogBuilder.create().show();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.the_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_start_daydream:
+                final Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
+                intent.putExtra(Constants.TEST_MODE, true);
+                startActivity(intent);
+
+                final SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+                final SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+                preferencesEditor.putLong(Constants.TEST_MODE, new Date().getTime());
+                preferencesEditor.apply();
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
 
     /**
      * Check if the notification listener service is running.
@@ -217,9 +354,5 @@ public class DreamySettingsActivity extends Activity {
         return false;
     }
 
-    private boolean hasPermission(String permission) {
-        return ContextCompat.checkSelfPermission(DreamySettingsActivity.this,
-                permission)
-                == PackageManager.PERMISSION_GRANTED;
-    }
+
 }

@@ -4,13 +4,13 @@ android {
     signingConfigs {
     }
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.2'
     defaultConfig {
         applicationId "de.dreamy"
         minSdkVersion 23
         targetSdkVersion 24
-        versionCode 2
-        versionName "0.0.1"
+        versionCode 3
+        versionName "0.0.2"
     }
     buildTypes {
         release {
@@ -42,7 +42,7 @@ dependencies {
     compile 'javax.inject:javax.inject:1'
     compile 'com.google.code.gson:gson:2.7'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     testApt "com.google.dagger:dagger-compiler:2.4"
 }
 
