@@ -125,7 +125,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         @Override
         public void onServiceStateChanged(final ServiceState serviceState) {
             if (carrierTextView.getVisibility() == View.VISIBLE) {
-                carrierTextView.setText(serviceState.getOperatorAlphaShort());
+                carrierTextView.setText(systemProperties.getCarrierName());
                 Log.d(TAG, serviceState.toString());
             }
         }

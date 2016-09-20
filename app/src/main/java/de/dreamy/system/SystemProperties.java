@@ -13,7 +13,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.dreamy.DreamyDaydream;
+import de.dreamy.util.Strings;
 
 /**
  * Provides access to device and system properties
@@ -45,8 +49,13 @@ public class SystemProperties {
      * @return A string with the carrier's name
      */
     public String getCarrierName() {
-        final TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return manager.getNetworkOperatorName();
+        final List<String> carrierNames = new ArrayList<>();
+        final SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
+        for (SubscriptionInfo subscriptionInfo : subscriptionManager.getActiveSubscriptionInfoList()) {
+            carrierNames.add(subscriptionInfo.getCarrierName().toString());
+        }
+        Log.d("Dreamy", "carrier names: " + carrierNames);
+        return Strings.join(carrierNames, " | ");
     }
 
 
