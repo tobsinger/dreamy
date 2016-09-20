@@ -14,6 +14,7 @@
     <string name="connectionTypeCharger">Ladegerät</string>
     <string name="connectionTypePC">PC (USB)</string>
     <string name="connectionTypeAlways">Immer</string>
+    <string name="app_selection">Apps ausschließen</string>
     <string name="percent">%d%%</string>
     <string name="daydream_disabled">Daydream ist nicht aktiv. Um Dreamy zu verwenden, muss Daydream aktiviert und Dreamy ausgewählt werden.</string>
     <string name="daydream_not_selected">Dreamy ist nicht als Daydream-App ausgewählt. Das kannst du in den Einstellungen ändern.</string>
@@ -24,4 +25,5 @@
     <string name="showNameOfTheApp">Zeige Name der App</string>
     <string name="showTitle">Zeige Titel</string>
     <string name="start_daydream">Daydream starten</string>
+    <string name="description_app_icon">App icon</string>
 </resources>

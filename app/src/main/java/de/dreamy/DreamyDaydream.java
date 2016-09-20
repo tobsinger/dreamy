@@ -293,13 +293,17 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         allNotifications.addAll(NotificationListener.getNotifications());
         final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
         final List<Integer> notifications = new ArrayList<>();
+        final Settings settings = settingsDao.getSettings(this);
 
         for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
             if (!notifications.contains(singleNotificationIdentifier)
                     && ((isOnlyNotificationWithGroupKey(n, allNotifications))
                     || (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC
-                    || n.getNotification().publicVersion != null))) {
+                    || n.getNotification().publicVersion != null))
+                    // app blacklist
+                    && !settings.getSelectedApps().contains(n.getPackageName())
+                    ) {
                 filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
             }
