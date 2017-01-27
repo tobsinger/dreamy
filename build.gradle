@@ -19,7 +19,7 @@ allprojects {
         jcenter()
     }
 }
-logger.warn("$System.env.bamboo_KEYSTORE_PASSWORD")
+logger.warn("variable: $System.env.bamboo_KEYSTORE_PASSWORD")
 
 task clean(type: Delete) {
     delete rootProject.buildDir
