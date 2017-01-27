@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        release {
+            storeFile file("../keystore.jks")
+            storePassword "$System.env.bamboo_KEYSTORE_PASSWORD"
+            keyAlias "key"
+            keyPassword "$System.env.bamboo_KEYSTORE_PASSWORD"
+        }
     }
     compileSdkVersion 24
     buildToolsVersion '24.0.2'
@@ -15,6 +21,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
