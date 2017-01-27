@@ -1,6 +1,7 @@
 package de.dreamy;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Debug;
 import android.util.Log;
 
@@ -16,6 +17,11 @@ public class DreamyApplication extends Application {
     private static final String TAG = DreamyApplication.class.getSimpleName();
 
     private static DreamyComponent dreamyComponent;
+    private static DreamyApplication instance;
+
+    public DreamyApplication() {
+        instance = this;
+    }
 
     @Override
     public void onCreate() {
@@ -29,5 +35,9 @@ public class DreamyApplication extends Application {
             Log.e(TAG, "trying to get injection component before it was initialized");
         }
         return dreamyComponent;
+    }
+
+    public static Context getContext() {
+        return instance;
     }
 }

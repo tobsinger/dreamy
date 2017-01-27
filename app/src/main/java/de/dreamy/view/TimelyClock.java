@@ -30,7 +30,6 @@ public class TimelyClock extends LinearLayout {
     private TimelyView minutes2;
     private TimelyView seconds1;
     private TimelyView seconds2;
-    private TextView separator;
 
     public static final int NO_VALUE = -1;
     private int mSecondFirstDigit = NO_VALUE;
@@ -130,7 +129,7 @@ public class TimelyClock extends LinearLayout {
         seconds2 = (TimelyView) findViewById(R.id.seconds2);
         initTimelyView(seconds2, color, textSize / 2, thickness / 2);
 
-        separator = (TextView) findViewById(R.id.separator);
+        final TextView separator = (TextView) findViewById(R.id.separator);
         separator.setTextSize(colonTextSize / 6);
         separator.setTextColor(color);
 

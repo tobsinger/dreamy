@@ -7,14 +7,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.service.dreams.DreamService;
@@ -44,6 +40,7 @@ import javax.inject.Inject;
 import de.dreamy.notifications.NotificationListener;
 import de.dreamy.settings.Settings;
 import de.dreamy.settings.SettingsDao;
+import de.dreamy.system.SystemProperties;
 import de.dreamy.view.TimelyClock;
 import de.dreamy.view.adapters.NotificationListAdapter;
 
@@ -57,6 +54,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
     @Inject
     SettingsDao settingsDao;
+    @Inject
+    SystemProperties systemProperties;
+
     /**
      * The list that holds the notification views
      */
@@ -112,7 +112,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
                 }
             }
             if (batteryPercentage != null) {
-                batteryPercentage.setText(batteryPct + "%");
+                batteryPercentage.setText(String.format(getString(R.string.percent), batteryPct));
             }
         }
     };
@@ -125,7 +125,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         @Override
         public void onServiceStateChanged(final ServiceState serviceState) {
             if (carrierTextView.getVisibility() == View.VISIBLE) {
-                carrierTextView.setText(serviceState.getOperatorAlphaShort());
+                carrierTextView.setText(systemProperties.getCarrierName());
                 Log.d(TAG, serviceState.toString());
             }
         }
@@ -187,7 +187,7 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         if (settings.isShowWifiStatus()) {
             final View wifiInfo = findViewById(R.id.wifiInfo);
-            final String currentWifi = getCurrentWifi();
+            final String currentWifi = systemProperties.getCurrentWifi();
             if (currentWifi != null) {
                 wifiInfo.setVisibility(View.VISIBLE);
                 final TextView wifiName = (TextView) findViewById(R.id.wifiName);
@@ -200,13 +200,9 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
 
         if (settings.isShowCarrierName()) {
             carrierTextView.setVisibility(View.VISIBLE);
-            carrierTextView.setText(getCarrierName());
+            carrierTextView.setText(systemProperties.getCarrierName());
         } else {
             carrierTextView.setVisibility(View.GONE);
-        }
-
-        if (settings.isShowBatteryStatus()) {
-            updateBatteryLevel();
         }
 
         final TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -220,7 +216,6 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
             );
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -298,13 +293,17 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         allNotifications.addAll(NotificationListener.getNotifications());
         final List<StatusBarNotification> filteredNotifications = new ArrayList<>();
         final List<Integer> notifications = new ArrayList<>();
+        final Settings settings = settingsDao.getSettings(this);
 
         for (final StatusBarNotification n : allNotifications) {
             int singleNotificationIdentifier = getNotificationIdentifier(n.getNotification());
             if (!notifications.contains(singleNotificationIdentifier)
                     && ((isOnlyNotificationWithGroupKey(n, allNotifications))
                     || (n.getNotification().visibility == Notification.VISIBILITY_PUBLIC
-                    || n.getNotification().publicVersion != null))) {
+                    || n.getNotification().publicVersion != null))
+                    // app blacklist
+                    && !settings.getSelectedApps().contains(n.getPackageName())
+                    ) {
                 filteredNotifications.add(n);
                 notifications.add(singleNotificationIdentifier);
             }
@@ -352,69 +351,20 @@ public class DreamyDaydream extends DreamService implements AdapterView.OnItemCl
         return identifierString.hashCode();
     }
 
-    /**
-     * Get the name of the currently connected wifi
-     *
-     * @return the name of the currently connected wifi. NULL if no wifi connected
-     */
-    private String getCurrentWifi() {
-        final ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        final Network networks[] = connManager.getAllNetworks();
-        for (final Network singleNetwork : networks) {
-            final NetworkInfo networkInfo = connManager.getNetworkInfo(singleNetwork);
-            if (ConnectivityManager.TYPE_WIFI == networkInfo.getType()) {
-                if (!networkInfo.isConnected()) {
-                    continue;
-                }
-                if (networkInfo.isConnected()) {
-                    final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-                    final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
-
-                    if (connectionInfo != null) {
-                        String ssid = connectionInfo.getSSID();
-                        String quotes = String.valueOf('"');
-                        if (ssid.startsWith(quotes)) {
-                            ssid = ssid.substring(1, ssid.length());
-                        }
-                        if (ssid.endsWith(quotes)) {
-                            ssid = ssid.substring(0, ssid.length() - 1);
-                        }
-                        return ssid;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * Get the name of the current carrier
-     *
-     * @return A string with the carrier's name
-     */
-    private String getCarrierName() {
-        final TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        final String carrierName = manager.getNetworkOperatorName();
-        return carrierName;
-    }
-
-
-    /**
-     * Get the current battery level and send it to the receiver
-     *
-     * @return
-     */
-    public void updateBatteryLevel() {
-        final Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        batteryBroadcastReceiver.onReceive(this, batteryIntent);
-    }
-
     private boolean isDaydreamDisabled(Settings settings) {
         final Settings.ConnectionType connectionType = settings.getConnectionType();
         if (connectionType != Settings.ConnectionType.ALWAYS) {
             Intent intent = registerReceiver(null, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+            final SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+            long testModeActivatedAt = sharedPreferences.getLong(Constants.TEST_MODE, 0);
+
+            boolean isInTestMode = (testModeActivatedAt + 5000) >= new Date().getTime();
+            if (isInTestMode) {
+                return false;
+            }
+
             boolean connectedToUSB = intent != null && intent.getExtras().getBoolean("connected");
+
             if ((connectedToUSB && connectionType == Settings.ConnectionType.CHARGER)
                     || (!connectedToUSB && connectionType == Settings.ConnectionType.PC)) {
                 return true;

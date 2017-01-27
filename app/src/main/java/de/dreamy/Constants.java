@@ -29,4 +29,8 @@ public interface Constants {
      * Intent filter used to send notifications about new status bar notifications
      */
     String INTENT_FILTER_NOTIFICATION_UPDATE = "notification_update";
+    /**
+     * The key to address the test mode flag for intents that start the day dream
+     */
+    String TEST_MODE = "test_mode";
 }

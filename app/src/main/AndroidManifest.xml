@@ -39,7 +39,12 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".settings.DreamySettingsActivity"/>
+        <activity android:name=".settings.DreamySettingsActivity">
+            <intent-filter android:label="@string/dreamy_settings">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
     </application>

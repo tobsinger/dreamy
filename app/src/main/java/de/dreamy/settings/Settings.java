@@ -1,5 +1,8 @@
 package de.dreamy.settings;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.dreamy.R;
 
 /**
@@ -45,6 +48,8 @@ public class Settings {
     private float screenBrightness = (float) .8;
 
     private ConnectionType connectionType = ConnectionType.ALWAYS;
+    private NotificationPrivacy notificationPrivacy = NotificationPrivacy.SHOW_EVERYTHING;
+    private Set<String> selectedApps = new HashSet<>();
 
 
     public boolean isWakeOnTimeClick() {
@@ -112,6 +117,22 @@ public class Settings {
         this.connectionType = connectionType;
     }
 
+    public NotificationPrivacy getNotificationPrivacy() {
+        return notificationPrivacy;
+    }
+
+    public void setNotificationPrivacy(final NotificationPrivacy notificationPrivacy) {
+        this.notificationPrivacy = notificationPrivacy;
+    }
+
+    public Set<String> getSelectedApps() {
+        return selectedApps;
+    }
+
+    public void setSelectedApps(Set<String> selectedApps) {
+        this.selectedApps = selectedApps;
+    }
+
     public enum ConnectionType {
         CHARGER(R.string.connectionTypeCharger),
         PC(R.string.connectionTypePC),
@@ -122,5 +143,19 @@ public class Settings {
         ConnectionType(int stringId) {
             this.stringId = stringId;
         }
+    }
+
+    public enum NotificationPrivacy{
+        SHOW_EVERYTHING(R.string.showEverything),
+        SHOW_TITLE(R.string.showTitle),
+        SHOW_APP_NAME(R.string.showNameOfTheApp);
+
+        public final int stringId;
+
+        NotificationPrivacy(int stringId) {
+            this.stringId = stringId;
+        }
+
+
     }
 }
